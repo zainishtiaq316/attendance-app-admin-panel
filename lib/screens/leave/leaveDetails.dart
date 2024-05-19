@@ -6,7 +6,7 @@ import '../../models/joinModel.dart';
 import '../../utils/assureDialog.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/loadingIndicator.dart';
-import '../AdminBN.dart';
+import '../Home/AdminBN.dart';
 import 'leaveConfirmation.dart';
 
 class leavedetails extends StatefulWidget {

@@ -74,7 +74,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -86,10 +86,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           child: Container(
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height *
-                  0.6, // Set the desired height here
+             
               child: Card(
                 elevation: 9,
+                surfaceTintColor: Colors.white,
                 shadowColor: black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -99,6 +99,30 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                           CircleAvatar(
+                                      radius: 70.0,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: widget.user.photoURL != null
+                                          ? NetworkImage(widget.user.photoURL!)
+                                          : null,
+                                      child: widget.user.photoURL == null
+                                          ? Text(
+                                              widget.user.firstName != null
+                                                  ? widget.user.firstName![0]
+                                                      .toUpperCase()
+                                                  : "",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : null,
+                                    ),
+                        ],
+                      ),
+                      SizedBox(height: 30,),
                       _buildDetailRow(
                         'Name',
                         '${widget.user.firstName} ${widget.user.secondName}',
@@ -135,8 +159,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       ),
                       SizedBox(height: 24),
                       isAdmin()
-                          ? ElevatedButton(
-                              onPressed: () {
+                          ? GestureDetector(
+                              onTap: () {
                                 setState(() {
                                   if (isEditing) {
                                     // Save updated roll number
@@ -146,9 +170,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                   isEditing = !isEditing;
                                 });
                               },
-                              child: Text(isEditing ? 'Save' : 'Edit'),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.height*0.07,
+                                decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(10)),
+                                child: Center(child: Text(isEditing ? 'Save' : 'Edit', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),), ), ),
                             )
                           : SizedBox(),
+                    
+                    
                     ],
                   ),
                 ),

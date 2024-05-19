@@ -1,9 +1,9 @@
-import 'package:attendeasyadmin/Admin/widget/admin-drawer.dart';
+import 'package:attendeasyadmin/widgets/admin-drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:attendeasyadmin/Admin/profile/eidt_profile_screen.dart';
+import 'package:attendeasyadmin/screens/Profile/eidt_profile_screen.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/splash.dart';
 import 'package:attendeasyadmin/screens/Profile/change_email.dart';
 import 'package:attendeasyadmin/screens/Profile/language_settings.dart';
@@ -51,7 +51,9 @@ class _AdminSettingsState extends State<AdminSettings> {
     return WillPopScope(
        onWillPop: onWillPop,
       child: Scaffold(
+        backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.white,
             actionsIconTheme: IconThemeData(color: Colors.blue),
             title: Text(
               "Settings",

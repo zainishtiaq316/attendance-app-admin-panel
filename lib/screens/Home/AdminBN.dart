@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'AdminHome.dart';
-import 'profile/AdminProfile.dart';
+import '../Profile/AdminProfile.dart';
 
 class AdminBottomNav extends StatefulWidget {
   @override

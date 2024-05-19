@@ -20,6 +20,7 @@ class _AdminAccountInfoState extends State<AdminAccountInfo> {
     String? name = user?.displayName;
     String? imageUrl = user?.photoURL;
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: kPColor,
           elevation: 0,
@@ -159,7 +160,7 @@ class _AdminAccountInfoState extends State<AdminAccountInfo> {
             "${value ?? ""}",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 20,
+              fontSize: 15,
             ),
           )
         ],

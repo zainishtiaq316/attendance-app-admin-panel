@@ -1,7 +1,7 @@
 // ignore_for_file: body_might_complete_normally_catch_error
 
 import 'package:flutter/widgets.dart';
-import 'package:attendeasyadmin/Admin/AdminHome.dart';
+import 'package:attendeasyadmin/screens/Home/AdminHome.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/Forgot_Screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,5 +1,5 @@
 // ignore_for_file: body_might_complete_normally_catch_error
-import 'package:attendeasyadmin/Admin/profile/admin_settings.dart';
+import 'package:attendeasyadmin/screens/Profile/admin_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 

@@ -1,6 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:attendeasyadmin/Admin/widget/admin-drawer.dart';
+import 'package:attendeasyadmin/widgets/admin-drawer.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

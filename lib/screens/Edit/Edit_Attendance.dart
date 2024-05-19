@@ -116,13 +116,19 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
       FirebaseFirestore.instance
           .collection('MarkAttendance')
           .doc(widget.user.uid) // Use the user ID as the document ID
-          .collection('attendance')
+          .collection('CheckIn')
+          .where('CurrentDate', isEqualTo: currentDate)
+          .get(),
+          FirebaseFirestore.instance
+          .collection('MarkAttendance')
+          .doc(widget.user.uid) // Use the user ID as the document ID
+          .collection('CheckOut')
           .where('CurrentDate', isEqualTo: currentDate)
           .get(),
       FirebaseFirestore.instance
-          .collection('Confirmedleaves')
+          .collection('MarkAttendance')
           .doc(widget.user.uid) // Use the user ID as the document ID
-          .collection('attendance')
+          .collection('Leaves')
           .where('currentDate', isEqualTo: currentDate)
           .get(),
     ]);
@@ -148,7 +154,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -291,7 +297,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
             stream: FirebaseFirestore.instance
                 .collection("MarkAttendance")
                 .doc(widget.user.uid)
-                .collection("attendance")
+                .collection("CheckIn")
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -532,6 +538,8 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
               );
             },
           ),
+        
+        
         ],
       ),
     );

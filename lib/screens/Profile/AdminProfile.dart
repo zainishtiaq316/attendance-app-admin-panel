@@ -1,20 +1,19 @@
 import 'dart:io';
-import 'package:attendeasyadmin/Admin/widget/admin-drawer.dart';
+import 'package:attendeasyadmin/widgets/admin-drawer.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:attendeasyadmin/Admin/profile/admin_account_info.dart';
-import 'package:attendeasyadmin/Admin/profile/eidt_profile_screen.dart';
+import 'package:attendeasyadmin/screens/Profile/admin_account_info.dart';
+import 'package:attendeasyadmin/screens/Profile/eidt_profile_screen.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/change_password.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/splash.dart';
 import 'package:attendeasyadmin/screens/Profile/developer_contact.dart';
 import 'package:attendeasyadmin/screens/Profile/helpScreen.dart';
 
 
-import '../../screens/Profile/myaccount.dart';
 
 import '../../utils/color_utils.dart';
 import '../../utils/loadingIndicator.dart';
@@ -66,7 +65,9 @@ class _AdminProfileState extends State<AdminProfile> {
     return WillPopScope(
        onWillPop: onWillPop,
       child: Scaffold(
+        backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.white,
             actionsIconTheme: IconThemeData(color: Colors.blue),
             title: Text(
               "Porfile",
@@ -192,7 +193,7 @@ class _AdminProfileState extends State<AdminProfile> {
                               left: 20, right: 20, bottom: 20),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.45,
+                            height: MediaQuery.of(context).size.height * 0.335,
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [
@@ -299,51 +300,7 @@ class _AdminProfileState extends State<AdminProfile> {
                                 Divider(
                                   color: Colors.grey.shade300,
                                 ),
-                                GestureDetector(
-      
-                                  onTap:(){
-      
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> HelpCenterScreen()));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15, left: 15, right: 15, bottom: 15),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: MediaQuery.of(context).size.width *
-                                              0.10,
-                                          height:
-                                              MediaQuery.of(context).size.height *
-                                                  0.05,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Icon(
-                                            Icons.help_center,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          "Help Center",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        Spacer(),
-                                        Icon(Icons.arrow_forward_ios)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Divider(
-                                  color: Colors.grey.shade300,
-                                ),
+                               
                                 GestureDetector(
       
                                   onTap :(){

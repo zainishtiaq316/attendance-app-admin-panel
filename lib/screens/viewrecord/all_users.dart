@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:attendeasyadmin/Admin/viewrecord/userdetailscreen.dart';
+import 'package:attendeasyadmin/screens/viewrecord/userdetailscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/splash.dart';
 
 import '../../../utils/color_utils.dart';
 import '../../models/usermodel.dart';
-import '../widget/admin-drawer.dart';
+import '../../widgets/admin-drawer.dart';
 // Import the user details screen
 
 class AllUsers extends StatefulWidget {
@@ -141,4 +141,6 @@ class _ViewRecordState extends State<AllUsers> {
       ),
     );
   }
+
+
 }

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/cupertino.dart';
-import 'package:attendeasyadmin/Admin/AdminHome.dart';
+import 'package:attendeasyadmin/screens/Home/AdminHome.dart';
 
 import '../../utils/color_utils.dart';
 import '../../utils/loadingIndicator.dart';
-import '../AdminBN.dart';
+import '../Home/AdminBN.dart';
 
 class leaveConfiramtion extends StatefulWidget {
   const leaveConfiramtion({

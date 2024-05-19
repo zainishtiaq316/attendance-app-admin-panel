@@ -190,6 +190,7 @@ final _auth = FirebaseAuth.instance;
     );
 
     return Scaffold(
+      
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,

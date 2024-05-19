@@ -3,17 +3,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:attendeasyadmin/Admin/profile/admin_settings.dart';
-import 'package:attendeasyadmin/Admin/viewrecord/Viewrecord.dart';
+import 'package:attendeasyadmin/screens/Profile/admin_settings.dart';
+import 'package:attendeasyadmin/screens/viewrecord/Viewrecord.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/splash.dart';
 
 import 'package:attendeasyadmin/utils/color_utils.dart';
 import 'package:attendeasyadmin/utils/loadingIndicator.dart';
 
-import '../../screens/Profile/developer_contact_drawer.dart';
-import '../AdminHome.dart';
-import '../profile/AdminProfile.dart';
-import '../viewrecord/all_users.dart';
+import '../screens/Profile/developer_contact_drawer.dart';
+import '../screens/Home/AdminHome.dart';
+import '../screens/Profile/AdminProfile.dart';
+import '../screens/viewrecord/all_users.dart';
 
 
 class AdminDrawerWidget extends StatelessWidget {

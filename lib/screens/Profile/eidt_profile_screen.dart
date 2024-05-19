@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:attendeasyadmin/Admin/AdminHome.dart';
-import 'package:attendeasyadmin/Admin/profile/AdminProfile.dart';
+import 'package:attendeasyadmin/screens/Home/AdminHome.dart';
+import 'package:attendeasyadmin/screens/Profile/AdminProfile.dart';
 import 'package:attendeasyadmin/screens/Profile/myimagePicker.dart';
 import 'package:attendeasyadmin/screens/Profile/uplader.dart';
 import 'package:attendeasyadmin/utils/color_utils.dart';
@@ -32,6 +32,35 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
     final lastNameEditingController = new TextEditingController();
     final emailEditingController = new TextEditingController();
     final phoneNumberEditingController = new TextEditingController();
+    final rollNoNumberEditingController = new TextEditingController();
+    String? firstName;
+  String? lastName;
+  String? email;
+  String? phoneNumber;
+  String? rollNo;
+
+  // Fetch user data from Firestore
+  Future<void> fetchUserData() async {
+    DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    // Extract user data
+    setState(() {
+      firstNameEditingController.text = userData['firstName'];
+      lastNameEditingController.text = userData['secondName'];
+      emailEditingController.text = userData['email'];
+      phoneNumberEditingController.text = userData['phoneNumber'];
+      rollNoNumberEditingController.text = userData['rollNo'];
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    // Call fetchUserData when the widget initializes
+    fetchUserData();
+  }
   File? pickImage;
   final _imgPicker = MyImagePicker();
   final UploaderService uploaderService = UploaderService();
@@ -110,6 +139,7 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
       obscureText: false,
       enableSuggestions: true,
       autocorrect: true,
+      enabled: false,
       controller: emailEditingController,
       cursorColor: Colors.black45,
       style: TextStyle(color: Colors.black45.withOpacity(0.9)),
@@ -177,45 +207,90 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
           fillColor: Color(0xfff3f3f4),
           filled: true),
     );
-   //signup button
+    //first name field
+    final rollNoField = TextFormField(
+      autofocus: false,
+      obscureText: false,
+      enableSuggestions: true,
+      autocorrect: true,
+      enabled: false,
+      controller: rollNoNumberEditingController,
+      cursorColor: Colors.black45,
+      style: TextStyle(color: Colors.black45.withOpacity(0.9)),
+      keyboardType: TextInputType.name,
+      validator: (value) {
+        RegExp regex = new RegExp(r'^.{3,}$');
+        if (value!.isEmpty) {
+          return ("Roll No can't be Empty");
+        }
+        if (!regex.hasMatch(value)) {
+          return ("Enter Valid Roll No");
+        }
+        return null;
+      },
+      onSaved: (value) {
+        //new
+        rollNoNumberEditingController.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Roll No",
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
+          border: InputBorder.none,
+          fillColor: Color(0xfff3f3f4),
+          filled: true),
+    );
+    //signup button
     final update = GestureDetector(
       onTap: () async {
         if (_formKey.currentState!.validate()) {
           loader(context);
-          if (pickImage != null) {
-            // loader(context);
-            final image = await uploaderService.uploadFile(
-                pickImage!, "Profile_Images", FileType.Image);
-
-            // await FirebaseDatabase.instance
-            //     .ref("Users")
-            //     .child(FirebaseAuth.instance.currentUser!.uid)
-            //     .update({"photoURL": image.downloadLink});
-            await FirebaseFirestore.instance
+          await FirebaseFirestore.instance
                 .collection("users")
                 .doc(FirebaseAuth.instance.currentUser!.uid)
                 .update({
-              "photoURL": image.downloadLink,
-              "email": emailEditingController,
-              "firstName": firstNameEditingController,
-              "secondName": lastNameEditingController,
-              "phoneNumber": phoneNumberEditingController,
+              // "photoURL": image.downloadLink,
             
+              "firstName": firstNameEditingController.text.trim(),
+              "secondName": lastNameEditingController.text.trim(),
+              "phoneNumber": phoneNumberEditingController.text.trim(),
+          
+            }).whenComplete((){
+               Fluttertoast.showToast(msg: "Profile Updated");
+            }).
+            
+            catchError((e){
+               Fluttertoast.showToast(msg: e!.message);
             });
-
-            await FirebaseAuth.instance.currentUser!
-                .updatePhotoURL(image.downloadLink)
-                .whenComplete(() {
-              Navigator.push(context,
+            Navigator.push(context,
                   MaterialPageRoute(builder: (context) => AdminProfile()));
+          // if (pickImage != null) {
+          //   loader(context);
+          //   final image = await uploaderService.uploadFile(
+          //       pickImage!, "Profile_Images", FileType.Image);
 
-              Fluttertoast.showToast(msg: "Profile Updated");
+          //   // await FirebaseDatabase.instance
+          //   //     .ref("Users")
+          //   //     .child(FirebaseAuth.instance.currentUser!.uid)
+          //   //     .update({"photoURL": image.downloadLink});
+            
 
-              setState(() {
-                pickImage = null;
-              });
-            });
-          }
+          //   await FirebaseAuth.instance.currentUser!
+          //   //     .updatePhotoURL(image.downloadLink)
+          //   //     .whenComplete(() {
+              
+
+          //   //   Fluttertoast.showToast(msg: "Profile Updated");
+
+          //   //   setState(() {
+          //   //     pickImage = null;
+          //   //   });
+          //   // });
+          
+          
+          // }
         }
       },
       child: Container(
@@ -245,6 +320,7 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
     );
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
                 backgroundColor: kPColor,
                 elevation: 0,
@@ -261,113 +337,89 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
                   },
                 ),
               ),
-      body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-          future:
-              FirebaseFirestore.instance.collection('users').doc(user?.uid).get(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child: CircularProgressIndicator(
-                color: kPColor,
-              )); // Loading indicator while fetching data
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              Map<String, dynamic>? userData = snapshot.data?.data();
-              String? firstName = userData?['firstName'];
-              String? SecondName = userData?['secondName'];
-              String? email = userData?['email'];
-              String? phoneNumber = userData?['phoneNumber'];
-              String? rollNo = userData?['rollNo'];
-              String? photoURL = userData?['photoURL'];
-      
-              firstNameEditingController.text = firstName.toString();
-              lastNameEditingController.text = SecondName.toString();
-              emailEditingController.text = email.toString();
-              phoneNumberEditingController.text = phoneNumber.toString();
-              return SingleChildScrollView(
+      body: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Stack(
-                          children: [
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.44,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      width: 2,
-                                      color: Theme.of(context)
-                                          .scaffoldBackgroundColor),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        color: Colors.black.withOpacity(0.1),
-                                        offset: Offset(0, 10))
-                                  ],
-                                  shape: BoxShape.circle,
-                                ),
-                                child: pickImage == null
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: CachedNetworkImage(
-                                          errorWidget: (context, url, error) {
-                                            return Image.asset(
-                                              "assets/images/user.png",
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                          fit: BoxFit.cover,
-                                          imageUrl:
-                                              "${user?.photoURL != null ? user?.photoURL : profileIcon}",
-                                        ),
-                                      )
-                                    : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(500),
-                                        child: Image.file(
-                                          pickImage!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )),
-                            Positioned(
-                                bottom: 10,
-                                right: 5,
-                                child: Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        width: 4,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Stack(
+                            children: [
+                              Container(
+                                  width: MediaQuery.of(context).size.width * 0.44,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        width: 2,
                                         color: Theme.of(context)
-                                            .scaffoldBackgroundColor,
+                                            .scaffoldBackgroundColor),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          spreadRadius: 2,
+                                          blurRadius: 10,
+                                          color: Colors.black.withOpacity(0.1),
+                                          offset: Offset(0, 10))
+                                    ],
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: pickImage == null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: CachedNetworkImage(
+                                            errorWidget: (context, url, error) {
+                                              return Image.asset(
+                                                "assets/images/user.png",
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                            fit: BoxFit.cover,
+                                            imageUrl:
+                                                "${user?.photoURL != null ? user?.photoURL : profileIcon}",
+                                          ),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(500),
+                                          child: Image.file(
+                                            pickImage!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )),
+                              Positioned(
+                                  bottom: 10,
+                                  right: 5,
+                                  child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 4,
+                                          color: Theme.of(context)
+                                              .scaffoldBackgroundColor,
+                                        ),
+                                        color: Colors.white,
                                       ),
-                                      color: Colors.white,
-                                    ),
-                                    child: Center(
-                                      child: GestureDetector(
-                                          onTap: () async {
-                                            _showImageSourceModal();
-                                          },
-                                          child: Icon(Icons.camera_alt,
-                                              color: Colors.black)),
-                                    ))),
-                          ],
+                                      child: Center(
+                                        child: GestureDetector(
+                                            onTap: () async {
+                                              _showImageSourceModal();
+                                            },
+                                            child: Icon(Icons.camera_alt,
+                                                color: Colors.black)),
+                                      ))),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Form(
-                        key: _formKey,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,7 +463,6 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
                               height: 10,
                             ),
                             phoneNumberField,
-                            SizedBox(height: 10),
                            
                             SizedBox(height: 20),
                             update,
@@ -419,12 +470,10 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            }
-          }),
+              )
     );
   }
 
@@ -447,6 +496,42 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
                       pickImage = file;
                     });
                   }
+                   if (pickImage != null) {
+            loader(context);
+            final image = await uploaderService.uploadFile(
+                pickImage!, "Profile_Images", FileType.Image);
+
+            // await FirebaseDatabase.instance
+            //     .ref("Users")
+            //     .child(FirebaseAuth.instance.currentUser!.uid)
+            //     .update({"photoURL": image.downloadLink});
+            await FirebaseFirestore.instance
+                .collection("users")
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .update({
+              "photoURL": image.downloadLink,
+            
+              // "firstName": firstNameEditingController.text.trim(),
+              // "secondName": lastNameEditingController.text.trim(),
+              // "phoneNumber": phoneNumberEditingController.text.trim(),
+          
+            }).catchError((e){
+               Fluttertoast.showToast(msg: e!.message);
+            });
+
+            await FirebaseAuth.instance.currentUser!
+                .updatePhotoURL(image.downloadLink)
+                .whenComplete(() {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => AdminProfile()));
+
+              Fluttertoast.showToast(msg: "Profile Updated");
+
+              setState(() {
+                pickImage = null;
+              });
+            });
+                   }
                 },
               ),
               ListTile(
@@ -461,6 +546,42 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
                       pickImage = file;
                     });
                   }
+                   if (pickImage != null) {
+            loader(context);
+            final image = await uploaderService.uploadFile(
+                pickImage!, "Profile_Images", FileType.Image);
+
+            // await FirebaseDatabase.instance
+            //     .ref("Users")
+            //     .child(FirebaseAuth.instance.currentUser!.uid)
+            //     .update({"photoURL": image.downloadLink});
+            await FirebaseFirestore.instance
+                .collection("users")
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .update({
+              "photoURL": image.downloadLink,
+            
+              // "firstName": firstNameEditingController.text.trim(),
+              // "secondName": lastNameEditingController.text.trim(),
+              // "phoneNumber": phoneNumberEditingController.text.trim(),
+          
+            }).catchError((e){
+               Fluttertoast.showToast(msg: e!.message);
+            });
+
+            await FirebaseAuth.instance.currentUser!
+                .updatePhotoURL(image.downloadLink)
+                .whenComplete(() {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AdminProfile()));
+
+              Fluttertoast.showToast(msg: "Profile Updated");
+
+              setState(() {
+                pickImage = null;
+              });
+            });
+                   }
                 },
               ),
             ],
@@ -469,5 +590,4 @@ class _EditProfileAdminState extends State<EditProfileAdmin> {
       },
     );
   }
-
 }

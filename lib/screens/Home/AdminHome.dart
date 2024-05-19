@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:attendeasyadmin/Admin/Edit/Edit.dart';
+import 'package:attendeasyadmin/screens/Edit/Edit.dart';
 
-import 'package:attendeasyadmin/Admin/leave/LeaveRequests.dart';
-import 'package:attendeasyadmin/Admin/viewrecord/Viewrecord.dart';
+import 'package:attendeasyadmin/screens/leave/LeaveRequests.dart';
+import 'package:attendeasyadmin/screens/viewrecord/Viewrecord.dart';
 import 'package:flutter/material.dart';
-import 'package:attendeasyadmin/Admin/widget/admin-drawer.dart';
+import 'package:attendeasyadmin/widgets/admin-drawer.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/splash.dart';
 
-import '../utils/color_utils.dart';
+import '../../utils/color_utils.dart';
 
 class AdminHome extends StatefulWidget {
   @override
