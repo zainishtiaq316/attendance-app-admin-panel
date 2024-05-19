@@ -41,57 +41,50 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAb5ThQ-ytLHhN5Y4GyQNQyvvvZKY9fQQ8',
-    appId: '1:28169414258:web:87b42fc6386d514b70c4eb',
-    messagingSenderId: '28169414258',
-    projectId: 'shop-ease-13fb5',
-    authDomain: 'shop-ease-13fb5.firebaseapp.com',
-    databaseURL: 'https://shop-ease-13fb5-default-rtdb.firebaseio.com',
-    storageBucket: 'shop-ease-13fb5.appspot.com',
-    measurementId: 'G-N6DEBJXMS7',
+    apiKey: 'AIzaSyAP8c_6DhEmphJn_HJcXj4wLpR_UcsEz0A',
+    appId: '1:1008109436961:web:0504bb0d23770bcf76a360',
+    messagingSenderId: '1008109436961',
+    projectId: 'attendance-app-80322',
+    authDomain: 'attendance-app-80322.firebaseapp.com',
+    storageBucket: 'attendance-app-80322.appspot.com',
+    measurementId: 'G-5RCY9F47BD',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyArm_aLy90eokRrs7XdE9hdFfM1MzY3yJk',
-    appId: '1:28169414258:android:aeceac5a421272b670c4eb',
-    messagingSenderId: '28169414258',
-    projectId: 'shop-ease-13fb5',
-    databaseURL: 'https://shop-ease-13fb5-default-rtdb.firebaseio.com',
-    storageBucket: 'shop-ease-13fb5.appspot.com',
+    apiKey: 'AIzaSyDDJ-iBbIzFfy5BfvrxfVpx7yDJ2HNgfeE',
+    appId: '1:1008109436961:android:db21f26807745ed276a360',
+    messagingSenderId: '1008109436961',
+    projectId: 'attendance-app-80322',
+    storageBucket: 'attendance-app-80322.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyABGAZnmPsxjO0W989bNxE_7EkkIMIcKQ8',
-    appId: '1:28169414258:ios:56659a72af57ca8e70c4eb',
-    messagingSenderId: '28169414258',
-    projectId: 'shop-ease-13fb5',
-    databaseURL: 'https://shop-ease-13fb5-default-rtdb.firebaseio.com',
-    storageBucket: 'shop-ease-13fb5.appspot.com',
-    androidClientId: '28169414258-h953f21jl3puvndhu8bm0fj5g74ibpfg.apps.googleusercontent.com',
-    iosClientId: '28169414258-upnu3m1ffr34vhdhg2u4h03bg5041i99.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDM1vJwpjykDr2ULoQ8Oieh6EplqAVj5yU',
+    appId: '1:1008109436961:ios:94739671d9a1420976a360',
+    messagingSenderId: '1008109436961',
+    projectId: 'attendance-app-80322',
+    storageBucket: 'attendance-app-80322.appspot.com',
+    iosClientId: '1008109436961-57hl19qik1hgul5seg4svui2e4cogvn5.apps.googleusercontent.com',
     iosBundleId: 'com.example.attendeasyadmin',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyABGAZnmPsxjO0W989bNxE_7EkkIMIcKQ8',
-    appId: '1:28169414258:ios:56659a72af57ca8e70c4eb',
-    messagingSenderId: '28169414258',
-    projectId: 'shop-ease-13fb5',
-    databaseURL: 'https://shop-ease-13fb5-default-rtdb.firebaseio.com',
-    storageBucket: 'shop-ease-13fb5.appspot.com',
-    androidClientId: '28169414258-h953f21jl3puvndhu8bm0fj5g74ibpfg.apps.googleusercontent.com',
-    iosClientId: '28169414258-upnu3m1ffr34vhdhg2u4h03bg5041i99.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDM1vJwpjykDr2ULoQ8Oieh6EplqAVj5yU',
+    appId: '1:1008109436961:ios:94739671d9a1420976a360',
+    messagingSenderId: '1008109436961',
+    projectId: 'attendance-app-80322',
+    storageBucket: 'attendance-app-80322.appspot.com',
+    iosClientId: '1008109436961-57hl19qik1hgul5seg4svui2e4cogvn5.apps.googleusercontent.com',
     iosBundleId: 'com.example.attendeasyadmin',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAb5ThQ-ytLHhN5Y4GyQNQyvvvZKY9fQQ8',
-    appId: '1:28169414258:web:18419319a84e082370c4eb',
-    messagingSenderId: '28169414258',
-    projectId: 'shop-ease-13fb5',
-    authDomain: 'shop-ease-13fb5.firebaseapp.com',
-    databaseURL: 'https://shop-ease-13fb5-default-rtdb.firebaseio.com',
-    storageBucket: 'shop-ease-13fb5.appspot.com',
-    measurementId: 'G-5YKJGMZFST',
+    apiKey: 'AIzaSyAP8c_6DhEmphJn_HJcXj4wLpR_UcsEz0A',
+    appId: '1:1008109436961:web:81d4f650470809bb76a360',
+    messagingSenderId: '1008109436961',
+    projectId: 'attendance-app-80322',
+    authDomain: 'attendance-app-80322.firebaseapp.com',
+    storageBucket: 'attendance-app-80322.appspot.com',
+    measurementId: 'G-S798NSYDNY',
   );
 }
