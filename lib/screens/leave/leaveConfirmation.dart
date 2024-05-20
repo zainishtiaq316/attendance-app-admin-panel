@@ -137,11 +137,11 @@ class _leaveConfiramtionState extends State<leaveConfiramtion> {
         elevation: 0,
         centerTitle: true,
         title: const Text(
-          "View Record",
+          "Leave Approval",
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -175,37 +175,24 @@ class _leaveConfiramtionState extends State<leaveConfiramtion> {
                   commentController.text = value!;
                 },
                 textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                  hintText: "Enter Comment",
-                  filled: true,
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  fillColor: Colors.white.withOpacity(0.3),
-                  hintStyle: TextStyle(color: Colors.black45.withOpacity(0.9)),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      width: 2,
-                      style: BorderStyle.solid,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                ),
-              ),
+              decoration: InputDecoration(
+         
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "Enter Comment",
+        
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          
+           hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
+           border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true)  ),
               const SizedBox(height: 20.0),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 50,
                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                child: ElevatedButton(
-                  onPressed: () async {
+                child: GestureDetector(
+                  onTap: () async {
                     //final comment = commentController.text.trim();
                     if (formkey.currentState!.validate()) {
                       loader(context);
@@ -243,29 +230,25 @@ class _leaveConfiramtionState extends State<leaveConfiramtion> {
                               builder: (context) => AdminHome()));
                     }
                   },
-                  child: Text(
-                    'Confirm Leave',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return Colors.black;
-                      }
-                      return Colors.blueGrey;
-                    }),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height*0.07,
+                decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
+                
+                    child: Center(
+                      child: Text(
+                        'Confirm Leave',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
+                
+                  
                 ),
               ),
             ],

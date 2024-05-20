@@ -128,7 +128,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
       FirebaseFirestore.instance
           .collection('MarkAttendance')
           .doc(widget.user.uid) // Use the user ID as the document ID
-          .collection('Leaves')
+          .collection('leaves')
           .where('currentDate', isEqualTo: currentDate)
           .get(),
     ]);
@@ -144,6 +144,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPColor,

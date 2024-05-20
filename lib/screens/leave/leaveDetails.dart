@@ -1,5 +1,7 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/joinModel.dart';
@@ -34,7 +36,7 @@ class _leavedetailsState extends State<leavedetails> {
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             //passing this to a route
             Navigator.of(context).pop();
@@ -212,9 +214,10 @@ class _leavedetailsState extends State<leavedetails> {
 
           Spacer(),
 
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: GestureDetector(
+              onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -233,53 +236,73 @@ class _leavedetailsState extends State<leavedetails> {
                               time: widget.joinModel.time,
                             )));
               },
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                shape: const StadiumBorder(),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 100,
+              
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height*0.07,
+                decoration: BoxDecoration(color: Colors.green.shade900, borderRadius: BorderRadius.circular(30)),
+                child: Center(
+                  child: Text("Accept",
+                      style: GoogleFonts.openSans(
+                        fontWeight: FontWeight.bold,
+                        color: white,
+                      )),
                 ),
               ),
-              child: Text("Accept",
-                  style: GoogleFonts.openSans(
-                    fontWeight: FontWeight.bold,
-                    color: white,
-                  )),
             ),
           ),
           // : SizedBox.shrink(),
           SizedBox(
             height: 10,
           ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                assuranceDialog(context, () async {
-                  loader(context);
-
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: GestureDetector(
+              onTap: () {
+                   AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.noHeader,
+                                      animType: AnimType.bottomSlide,
+                                      title: 'Rejected ',
+                                      desc: 'Are you sure?',
+                                      btnCancelOnPress: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      btnOkOnPress: () async {
+                                                        loader(context);
+            
                   await documentRef.delete();
-
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => AdminBottomNav()));
-                });
+                                      }).show();
+                                
+                // assuranceDialog(context, () async {
+                //   loader(context);
+            
+                //   await documentRef.delete();
+            
+                //   Navigator.pushReplacement(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => AdminBottomNav()));
+                // });
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                elevation: 0,
-                shape: const StadiumBorder(),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 100,
+              
+              child: Container(
+                 width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height*0.07,
+                decoration: BoxDecoration(color: Colors.red.shade900, borderRadius: BorderRadius.circular(30)),
+                
+                child: Center(
+                  child: Text("Reject",
+                      style: GoogleFonts.openSans(
+                        fontWeight: FontWeight.bold,
+                        color: white,
+                      )),
                 ),
               ),
-              child: Text("Reject",
-                  style: GoogleFonts.openSans(
-                    fontWeight: FontWeight.bold,
-                    color: white,
-                  )),
             ),
           ),
           SizedBox(height: 50.0),

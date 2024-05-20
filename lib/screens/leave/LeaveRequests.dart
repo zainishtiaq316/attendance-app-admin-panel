@@ -41,6 +41,8 @@ class _LeaveRequestsState extends State<LeaveRequests> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,
@@ -50,7 +52,7 @@ class _LeaveRequestsState extends State<LeaveRequests> {
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             //passing this to a route
             Navigator.of(context).pop();
@@ -112,24 +114,50 @@ class _LeaveRequestsState extends State<LeaveRequests> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            RichText(
-                                text: TextSpan(
-                                    style: GoogleFonts.openSans(
-                                      color: black,
-                                    ),
-                                    children: [
-                                  TextSpan(
-                                    text: 'Leave Request From ',
-                                    style: GoogleFonts.openSans(color: black),
-                                  ),
-                                  TextSpan(
-                                    text: '${list['name']}',
-                                    style: GoogleFonts.openSans(
-                                        color: black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ])),
-                            Icon(CupertinoIcons.forward)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                        text: TextSpan(
+                                            style: GoogleFonts.openSans(
+                                              color: black,
+                                            ),
+                                            children: [
+                                          TextSpan(
+                                            text: 'Leave Request From ',
+                                            style: GoogleFonts.openSans(color: black),
+                                          ),
+                                          TextSpan(
+                                            text: '${list['name']}',
+                                            style: GoogleFonts.openSans(
+                                                color: black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ])),
+                                  
+                                  ],
+                                ),
+                               SizedBox(height: 5,),
+                               Text(list['rollNo'], style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),)
+                                , SizedBox(height: 5,),
+                               Text(list['email'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                                  , SizedBox(height: 5,),
+                               Text(list['contact'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                                , SizedBox(height: 10,),
+                                 Text("Leave Description : ", style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),)
+                                , SizedBox(height: 5,),
+                               Text(list['description'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                              
+                              ],
+                            ),
+                            Container(
+                              height: MediaQuery.of(context).size.height*0.2,
+                              width: MediaQuery.of(context).size.width*0.1,  
+                              color: Colors.blue,
+                              child: Icon(CupertinoIcons.forward, size: 30,color: Colors.white,))
                           ],
                         ),
                       ),
