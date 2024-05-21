@@ -141,143 +141,144 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
           },
         ),
       ),
+      
       body: Column(
         children: [
+          // Padding(
+          //   padding: const EdgeInsets.all(16.0),
+          //   child: ElevatedButton(
+          //     onPressed: () {
+          //       showDialog(
+          //         context: context,
+          //         builder: (BuildContext context) {
+          //           return SingleChildScrollView(
+          //             child: FutureBuilder<bool>(
+          //                 // Pass your query function as the future argument
+          //                 future: checkAttendance(),
+          //                 // Define a builder function that returns a widget based on the state of the future
+          //                 builder: (context, snapshot) {
+          //                   // Check if the future is completed
+          //                   if (snapshot.connectionState ==
+          //                       ConnectionState.done) {
+          //                     // Check if the future returned true or false
+          //                     if (snapshot.data == true) {
+          //                       // The attendance is already marked on the current date, so return a message widget
+          //                       return Padding(
+          //                         padding: EdgeInsets.only(top: 80.0),
+          //                         child: AlertDialog(
+          //                           title: Padding(
+          //                             padding: EdgeInsets.only(
+          //                                 top:
+          //                                     20.0), // Add some padding to the top
+          //                             child: Text(
+          //                                 'User already marked attendance today.'),
+          //                           ),
+          //                           actions: [
+          //                             TextButton(
+          //                               child: Text('OK'),
+          //                               onPressed: () {
+          //                                 Navigator.of(context).pop();
+          //                               },
+          //                             ),
+          //                           ],
+          //                         ),
+          //                       );
+          //                     } else {
+          //                       return Container(
+          //                         height:
+          //                             MediaQuery.of(context).size.height * 0.7,
+          //                         // Adjust the height as needed
+          //                         child: SingleChildScrollView(
+          //                           child: AlertDialog(
+          //                             title: Text("Add Attendance"),
+          //                             content: SingleChildScrollView(
+          //                               child: Column(
+          //                                 children: [
+          //                                   TextField(
+          //                                     controller: nameController,
+          //                                     decoration: InputDecoration(
+          //                                       labelText: "Name",
+          //                                     ),
+          //                                   ),
+          //                                   TextField(
+          //                                     controller: rollNoController,
+          //                                     decoration: InputDecoration(
+          //                                       labelText: "Roll No",
+          //                                     ),
+          //                                   ),
+          //                                   TextField(
+          //                                     controller: contactController,
+          //                                     decoration: InputDecoration(
+          //                                       labelText: "Contact",
+          //                                     ),
+          //                                   ),
+          //                                   TextField(
+          //                                     controller: emailController,
+          //                                     decoration: InputDecoration(
+          //                                       labelText: "Email",
+          //                                     ),
+          //                                   ),
+          //                                   TextField(
+          //                                     controller:
+          //                                         attendanceStatusController,
+          //                                     decoration: InputDecoration(
+          //                                       labelText: "Attendance Status",
+          //                                     ),
+          //                                   ),
+          //                                   TextField(
+          //                                     controller: currentDateController,
+          //                                     decoration: InputDecoration(
+          //                                       labelText:
+          //                                           "Current Date and Time",
+          //                                     ),
+          //                                   ),
+          //                                 ],
+          //                               ),
+          //                             ),
+          //                             actions: [
+          //                               TextButton(
+          //                                 child: Text("Add"),
+          //                                 onPressed: () {
+          //                                   String attendanceStatus =
+          //                                       attendanceStatusController.text;
+          //                                   addAttendanceRecord(
+          //                                       attendanceStatus);
+          //                                   Navigator.of(context).pop();
+          //                                 },
+          //                               ),
+          //                               TextButton(
+          //                                 child: Text("Cancel"),
+          //                                 onPressed: () {
+          //                                   Navigator.of(context).pop();
+          //                                 },
+          //                               ),
+          //                             ],
+          //                           ),
+          //                         ),
+          //                       );
+          //                     }
+          //                   } //first if
+          //                   else {
+          //                     // The future is not completed yet, so return a loading indicator widget
+          //                     return Padding(
+          //                       padding: const EdgeInsets.all(80.0),
+          //                       child: Center(
+          //                         child: CircularProgressIndicator(
+          //                           color: kPColor,
+          //                         ),
+          //                       ),
+          //                     );
+          //                   }
+          //                 }),
+          //           );
+          //         },
+          //       );
+          //     },
+          //     child: Text("Add Attendance"),
+          //   ),
+          // ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SingleChildScrollView(
-                      child: FutureBuilder<bool>(
-                          // Pass your query function as the future argument
-                          future: checkAttendance(),
-                          // Define a builder function that returns a widget based on the state of the future
-                          builder: (context, snapshot) {
-                            // Check if the future is completed
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              // Check if the future returned true or false
-                              if (snapshot.data == true) {
-                                // The attendance is already marked on the current date, so return a message widget
-                                return Padding(
-                                  padding: EdgeInsets.only(top: 80.0),
-                                  child: AlertDialog(
-                                    title: Padding(
-                                      padding: EdgeInsets.only(
-                                          top:
-                                              20.0), // Add some padding to the top
-                                      child: Text(
-                                          'User already marked attendance today.'),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  // Adjust the height as needed
-                                  child: SingleChildScrollView(
-                                    child: AlertDialog(
-                                      title: Text("Add Attendance"),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            TextField(
-                                              controller: nameController,
-                                              decoration: InputDecoration(
-                                                labelText: "Name",
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: rollNoController,
-                                              decoration: InputDecoration(
-                                                labelText: "Roll No",
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: contactController,
-                                              decoration: InputDecoration(
-                                                labelText: "Contact",
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: emailController,
-                                              decoration: InputDecoration(
-                                                labelText: "Email",
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller:
-                                                  attendanceStatusController,
-                                              decoration: InputDecoration(
-                                                labelText: "Attendance Status",
-                                              ),
-                                            ),
-                                            TextField(
-                                              controller: currentDateController,
-                                              decoration: InputDecoration(
-                                                labelText:
-                                                    "Current Date and Time",
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          child: Text("Add"),
-                                          onPressed: () {
-                                            String attendanceStatus =
-                                                attendanceStatusController.text;
-                                            addAttendanceRecord(
-                                                attendanceStatus);
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text("Cancel"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }
-                            } //first if
-                            else {
-                              // The future is not completed yet, so return a loading indicator widget
-                              return Padding(
-                                padding: const EdgeInsets.all(80.0),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: kPColor,
-                                  ),
-                                ),
-                              );
-                            }
-                          }),
-                    );
-                  },
-                );
-              },
-              child: Text("Add Attendance"),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+            padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
             child: Row(
               children: [
                 Expanded(

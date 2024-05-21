@@ -1,3 +1,4 @@
+import 'package:attendeasyadmin/screens/viewrecord/add_users.dart';
 import 'package:attendeasyadmin/screens/viewrecord/userdetailscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -14,29 +15,28 @@ class ViewRecord extends StatefulWidget {
 }
 
 class _ViewRecordState extends State<ViewRecord> {
-  Future<List<UserModel>> fetchAllUsers() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  Stream<List<UserModel>> fetchAllUsers() {
+    return FirebaseFirestore.instance
         .collection('users')
         .where('role', isNotEqualTo: 'Admin')
-        .get();
-    List<UserModel> allUsers = [];
-    if (querySnapshot.docs.isNotEmpty) {
-      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-      for (var document in documents) {
-        Map<String, dynamic> userData =
-            document.data() as Map<String, dynamic>;
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) {
+      List<UserModel> allUsers = [];
+      querySnapshot.docs.forEach((document) {
+        Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
         UserModel user = UserModel(
-            uid: userData['uid'],
-            firstName: userData['firstName'],
-            secondName: userData['secondName'],
-            phoneNumber: userData['phoneNumber'],
-            email: userData['email'],
-            photoURL: userData['photoURL'],
-            rollNo: userData['rollNo']);
+          uid: userData['uid'],
+          firstName: userData['firstName'],
+          secondName: userData['secondName'],
+          phoneNumber: userData['phoneNumber'],
+          email: userData['email'],
+          photoURL: userData['photoURL'],
+          rollNo: userData['rollNo'],
+        );
         allUsers.add(user);
-      }
-    }
-    return allUsers;
+      });
+      return allUsers;
+    });
   }
 
   Future<void> deleteUser(UserModel user) async {
@@ -46,14 +46,14 @@ class _ViewRecordState extends State<ViewRecord> {
           .collection('users')
           .doc(user.uid)
           .delete();
-     await FirebaseFirestore.instance
-        .collection("MarkAttendance")
-        .doc(user.uid)
-        .delete();
       await FirebaseFirestore.instance
-        .collection("Confirmedleaves")
-        .doc(user.uid)
-        .delete();
+          .collection("MarkAttendance")
+          .doc(user.uid)
+          .delete();
+      await FirebaseFirestore.instance
+          .collection("Confirmedleaves")
+          .doc(user.uid)
+          .delete();
 
       await FirebaseAuth.instance.currentUser!.delete();
     } catch (e) {
@@ -72,6 +72,30 @@ class _ViewRecordState extends State<ViewRecord> {
 
   @override
   Widget build(BuildContext context) {
+    Widget snapshotWidget() {
+      return AddUsers();
+    }
+
+    void _showSnapshot() {
+      showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          useSafeArea: true,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.only(
+              topEnd: Radius.circular(25),
+              topStart: Radius.circular(25),
+            ),
+          ),
+          builder: (BuildContext context) => AnimatedPadding(
+                padding: MediaQuery.of(context).viewInsets,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.decelerate,
+                child: snapshotWidget(),
+              ));
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPColor,
@@ -88,9 +112,22 @@ class _ViewRecordState extends State<ViewRecord> {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showSnapshot();
+        },
+        tooltip: 'Increment',
+        focusColor: kPColor,
+        splashColor: kPColor,
+        backgroundColor: kPColor,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
       body: Container(
-        child: FutureBuilder<List<UserModel>>(
-          future: fetchAllUsers(),
+        child: StreamBuilder<List<UserModel>>(
+          stream: fetchAllUsers(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
