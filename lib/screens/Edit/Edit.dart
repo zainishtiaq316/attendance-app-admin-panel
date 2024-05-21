@@ -15,30 +15,32 @@ class EditAttendance extends StatefulWidget {
 }
 
 class _EditAttendanceState extends State<EditAttendance> {
-   Future<List<UserModel>> fetchAllUsers() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .where('role', isNotEqualTo: 'Admin')
-        .get();
-    List<UserModel> allUsers = [];
-    if (querySnapshot.docs.isNotEmpty) {
-      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-      for (var document in documents) {
-        Map<String, dynamic> userData =
-            document.data() as Map<String, dynamic>;
-        UserModel user = UserModel(
-            uid: userData['uid'],
-            firstName: userData['firstName'],
-            secondName: userData['secondName'],
-            phoneNumber: userData['phoneNumber'],
-            email: userData['email'],
-            photoURL: userData['photoURL'],
-            rollNo: userData['rollNo']);
-        allUsers.add(user);
-      }
-    }
-    return allUsers;
-  }
+  Stream<List<UserModel>> fetchAllUsers() {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .where('role', isNotEqualTo: 'Admin')
+      .snapshots()
+      .map((querySnapshot) {
+        List<UserModel> allUsers = [];
+        if (querySnapshot.docs.isNotEmpty) {
+          List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+          for (var document in documents) {
+            Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+            UserModel user = UserModel(
+              uid: userData['uid'],
+              firstName: userData['firstName'],
+              secondName: userData['secondName'],
+              phoneNumber: userData['phoneNumber'],
+              email: userData['email'],
+              photoURL: userData['photoURL'],
+              rollNo: userData['rollNo'],
+            );
+            allUsers.add(user);
+          }
+        }
+        return allUsers;
+      });
+}
 
   void navigateToUserDetails(UserModel user) {
     Navigator.push(
@@ -68,8 +70,8 @@ class _EditAttendanceState extends State<EditAttendance> {
         ),
       ),
        body: Container(
-        child: FutureBuilder<List<UserModel>>(
-          future: fetchAllUsers(),
+        child: StreamBuilder<List<UserModel>>(
+          stream: fetchAllUsers(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());

@@ -186,18 +186,18 @@ class _ViewRecordState extends State<ViewRecord> {
                                       backgroundImage: user.photoURL != null
                                           ? NetworkImage(user.photoURL!)
                                           : null,
-                                      child: user.photoURL == null
+                                      child: user.photoURL!.isEmpty
                                           ? Text(
-                                              user.firstName != null
-                                                  ? user.firstName![0]
-                                                      .toUpperCase()
-                                                  : "",
+                                              "${user.firstName?[0]}",
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
                                             )
                                           : null,
+                                          
                                     ),
+
+                                 
                                     SizedBox(
                                       width: 10,
                                     ),

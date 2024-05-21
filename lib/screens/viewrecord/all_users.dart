@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,26 +21,39 @@ class AllUsers extends StatefulWidget {
 }
 
 class _ViewRecordState extends State<AllUsers> {
-  Future<List<UserModel>> fetchAllUsers() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    List<UserModel> allUsers = [];
-    if (querySnapshot.docs.isNotEmpty) {
-      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-      for (var document in documents) {
-        Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
-        UserModel user = UserModel(
-            uid: userData['uid'],
-            firstName: userData['firstName'],
-            secondName: userData['secondName'],
-            phoneNumber: userData['phoneNumber'],
-            email: userData['email'],
-            photoURL: userData['photoURL'],
-            rollNo: userData['rollNo']);
-        allUsers.add(user);
+  Stream<List<UserModel>> fetchAllUsersStream() {
+    // Create a StreamController to manage the stream
+    StreamController<List<UserModel>> _controller =
+        StreamController<List<UserModel>>();
+
+    // Whenever there's a change in the collection, update the stream
+    FirebaseFirestore.instance
+        .collection('users')
+        .snapshots()
+        .listen((querySnapshot) {
+      List<UserModel> allUsers = [];
+      if (querySnapshot.docs.isNotEmpty) {
+        List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+        for (var document in documents) {
+          Map<String, dynamic> userData =
+              document.data() as Map<String, dynamic>;
+          UserModel user = UserModel(
+              uid: userData['uid'],
+              firstName: userData['firstName'],
+              secondName: userData['secondName'],
+              phoneNumber: userData['phoneNumber'],
+              email: userData['email'],
+              photoURL: userData['photoURL'],
+              rollNo: userData['rollNo']);
+          allUsers.add(user);
+        }
       }
-    }
-    return allUsers;
+      // Add the updated list of users to the stream
+      _controller.add(allUsers);
+    });
+
+    // Return the stream from the StreamController
+    return _controller.stream;
   }
 
   void navigateToUserDetails(UserModel user) {
@@ -49,7 +64,8 @@ class _ViewRecordState extends State<AllUsers> {
       ),
     );
   }
-   late FocusNode myFocusNode;
+
+  late FocusNode myFocusNode;
 
   DateTime? currentBackPressTime;
   Future<bool> onWillPop() async {
@@ -64,13 +80,14 @@ class _ViewRecordState extends State<AllUsers> {
       });
       return Future.value(false);
     }
-     await FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => SplashScreen()));
 
     return Future.value(true);
   }
-   @override
+
+  @override
   void dispose() {
     super.dispose();
     myFocusNode.dispose();
@@ -80,9 +97,9 @@ class _ViewRecordState extends State<AllUsers> {
   Widget build(BuildContext context) {
     // ignore: deprecated_member_use
     return WillPopScope(
-        onWillPop: onWillPop,
+      onWillPop: onWillPop,
       child: Scaffold(
-       appBar: AppBar(
+        appBar: AppBar(
           actionsIconTheme: IconThemeData(color: Colors.blue),
           title: Text(
             "All Users",
@@ -96,8 +113,9 @@ class _ViewRecordState extends State<AllUsers> {
         backgroundColor: Colors.white,
         drawer: AdminDrawerWidget(),
         body: Container(
-          child: FutureBuilder<List<UserModel>>(
-            future: fetchAllUsers(),
+          child: StreamBuilder<List<UserModel>>(
+            stream:
+                fetchAllUsersStream(), // assuming fetchAllUsersStream() returns a Stream<List<UserModel>>
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -113,7 +131,8 @@ class _ViewRecordState extends State<AllUsers> {
                       return Card(
                         color: Colors.white,
                         elevation: 3,
-                        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         shadowColor: black,
                         child: ListTile(
                           onTap: () {
@@ -125,7 +144,6 @@ class _ViewRecordState extends State<AllUsers> {
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
-      
                           // Add more user details if needed
                         ),
                       );
@@ -141,6 +159,4 @@ class _ViewRecordState extends State<AllUsers> {
       ),
     );
   }
-
-
 }

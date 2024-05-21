@@ -37,113 +37,111 @@ class _AdminAccountInfoState extends State<AdminAccountInfo> {
             },
           ),
         ),
-        body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            future: FirebaseFirestore.instance
-                .collection('users')
-                .doc(user?.uid)
-                .get(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                    child: CircularProgressIndicator(
-                  color: kPColor,
-                )); // Loading indicator while fetching data
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                Map<String, dynamic>? userData = snapshot.data?.data();
-                String? firstName = userData?['firstName'];
-                String? SecondName = userData?['secondName'];
-                String? email = userData?['email'];
-                String? phone = userData?['phoneNumber'];
+        body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+  stream: FirebaseFirestore.instance
+      .collection('users')
+      .doc(user?.uid)
+      .snapshots(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(
+          child: CircularProgressIndicator(
+        color: kPColor,
+      )); // Loading indicator while fetching data
+    } else if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    } else if (!snapshot.hasData || snapshot.data?.data() == null) {
+      return Text('No data available');
+    } else {
+      Map<String, dynamic>? userData = snapshot.data?.data();
+      String? firstName = userData?['firstName'];
+      String? secondName = userData?['secondName'];
+      String? email = userData?['email'];
+      String? phone = userData?['phoneNumber'];
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30),
-                            child: CircleAvatar(
-                              radius: 80.0,
-                              backgroundColor: Colors.white,
-                              backgroundImage: imageUrl != null
-                                  ? NetworkImage(imageUrl)
-                                  : null,
-                              child: imageUrl == null
-                                  ? Text(
-                                      name != null ? name[0].toUpperCase() : "",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  : null,
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: CircleAvatar(
+                    radius: 80.0,
+                    backgroundColor: Colors.white,
+                    backgroundImage: imageUrl != null
+                        ? NetworkImage(imageUrl)
+                        : null,
+                    child: imageUrl == null
+                        ? Text(
+                            name != null ? name[0].toUpperCase() : "",
+                            style: TextStyle(
+                              color: Colors.black,
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Divider(
-                        color: Colors.grey.shade300,
-                      ),
-                      info("Name", "$firstName $SecondName"),
-                      info("Email", "$email"),
-                      info("Phone", "$phone"),
-                   
-                      SizedBox(
-                        height: 30,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.noHeader,
-                              animType: AnimType.bottomSlide,
-                           
-                              title: 'Deactivate Account',
-                              desc:
-                                  'Are you sure you want to deactivate your account?',
-                              btnCancelOnPress: () {
-                                Navigator.of(context).pop();
-                              },
-                              btnOkOnPress: () async {
-                                 loader(context);
-                                await FirebaseAuth.instance.currentUser!
-                                    .delete();
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SplashScreen()));
-                              }).show();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.07,
-                            decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Center(
-                                child: Text(
-                              "Deactivate Your Account",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                          ),
-                        ),
-                      )
-                    ],
+                          )
+                        : null,
                   ),
-                );
-              }
-            }));
-  }
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Divider(
+              color: Colors.grey.shade300,
+            ),
+            info("Name", "$firstName $secondName"),
+            info("Email", "$email"),
+            info("Phone", "$phone"),
+            SizedBox(
+              height: 30,
+            ),
+            GestureDetector(
+              onTap: () {
+                AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.noHeader,
+                    animType: AnimType.bottomSlide,
+                    title: 'Deactivate Account',
+                    desc: 'Are you sure you want to deactivate your account?',
+                    btnCancelOnPress: () {
+                      Navigator.of(context).pop();
+                    },
+                    btnOkOnPress: () async {
+                      loader(context);
+                      await FirebaseAuth.instance.currentUser!.delete();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SplashScreen()));
+                    }).show();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Center(
+                      child: Text(
+                    "Deactivate Your Account",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  )),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+  }));
+}
 
   Widget info(String name, String value) {
     return Padding(
