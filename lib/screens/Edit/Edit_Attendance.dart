@@ -1,3 +1,4 @@
+import 'package:attendeasyadmin/screens/viewrecord/add_attendance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../models/usermodel.dart';
 import '../../utils/color_utils.dart';
+import '../viewrecord/add_users.dart';
 
 // ignore: must_be_immutable
 class EditAttendanceScreen extends StatefulWidget {
@@ -125,6 +127,30 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+     Widget snapshotWidget() {
+      return AddAttendance();
+    }
+
+    void _showSnapshot() {
+      showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          useSafeArea: true,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.only(
+              topEnd: Radius.circular(25),
+              topStart: Radius.circular(25),
+            ),
+          ),
+          builder: (BuildContext context) => AnimatedPadding(
+                padding: MediaQuery.of(context).viewInsets,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.decelerate,
+                child: snapshotWidget(),
+              ));
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPColor,
@@ -141,6 +167,16 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
           },
         ),
       ),
+    floatingActionButton: FloatingActionButton(
+  backgroundColor: kPColor,
+  tooltip: 'Add Attendance',
+  onPressed: () {
+    
+    _showSnapshot();
+  },
+  child: const Icon(Icons.add, color: Colors.white, size: 28),
+),
+
       
       body: Column(
         children: [

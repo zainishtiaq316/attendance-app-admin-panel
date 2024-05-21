@@ -68,12 +68,14 @@ class AdminDrawerWidget extends StatelessWidget {
                           radius: 60.0,
                           backgroundColor: Colors.white,
                           backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
-                          child: imageUrl == null ? Text(
+                          child: imageUrl!.isEmpty
+                        ? Text(
                             name != null ? name[0].toUpperCase() : "",
                             style: TextStyle(
                               color: Colors.black,
                             ),
-                          ) : null,
+                          )
+                        : null,
                         ),
                         SizedBox(height: 10),
                         Text(

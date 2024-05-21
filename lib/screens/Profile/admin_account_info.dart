@@ -74,13 +74,15 @@ class _AdminAccountInfoState extends State<AdminAccountInfo> {
                         ? NetworkImage(imageUrl)
                         : null,
                     child: imageUrl == null
-                        ? Text(
-                            name != null ? name[0].toUpperCase() : "",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          )
-                        : null,
+                                          ? Text(
+                                              name != null
+                                                  ? name[0].toUpperCase()
+                                                  : "",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            )
+                                          : null,
                   ),
                 ),
               ],
