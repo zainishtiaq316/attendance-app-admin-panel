@@ -111,53 +111,53 @@ class _LeaveRequestsState extends State<LeaveRequests> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 24, horizontal: 16),
                       child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    RichText(
-                                        text: TextSpan(
-                                            style: GoogleFonts.openSans(
-                                              color: black,
-                                            ),
-                                            children: [
-                                          TextSpan(
-                                            text: 'Leave Request From ',
-                                            style: GoogleFonts.openSans(color: black),
-                                          ),
-                                          TextSpan(
-                                            text: '${list['name']}',
-                                            style: GoogleFonts.openSans(
-                                                color: black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ])),
-                                  
-                                  ],
-                                ),
-                               SizedBox(height: 5,),
-                               Text(list['rollNo'], style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),)
-                                , SizedBox(height: 5,),
-                               Text(list['email'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
-                                  , SizedBox(height: 5,),
-                               Text(list['contact'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
-                                , SizedBox(height: 10,),
-                                 Text("Leave Description : ", style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),)
-                                , SizedBox(height: 5,),
-                               Text(list['description'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                                RichText(
+                                    text: TextSpan(
+                                        style: GoogleFonts.openSans(
+                                          color: black,
+                                        ),
+                                        children: [
+                                      TextSpan(
+                                        text: 'Leave Request From ',
+                                        style: GoogleFonts.openSans(color: black),
+                                      ),
+                                      TextSpan(
+                                        text: '${list['name']}',
+                                        style: GoogleFonts.openSans(
+                                            color: black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ])),
                               
                               ],
                             ),
-                            Container(
-                              height: MediaQuery.of(context).size.height*0.2,
-                              width: MediaQuery.of(context).size.width*0.1,  
-                              color: Colors.blue,
-                              child: Icon(CupertinoIcons.forward, size: 30,color: Colors.white,))
+                           SizedBox(height: 5,),
+                           Text("Roll No : ${list['rollNo']}", style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),)
+                            , SizedBox(height: 5,),
+                           Text(list['email'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                              , SizedBox(height: 5,),
+                           Text(list['contact'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                            , SizedBox(height: 10,),
+                             Text("Leave Description : ", style: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold),)
+                            , SizedBox(height: 5,),
+                           Text(list['description'], style: TextStyle(color: Colors.black, fontSize: 13, ),)
+                           ,
+                           SizedBox(height: 5,),
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                            Text("More Detail", style: TextStyle(color: Colors.green.shade800, fontSize: 12, fontWeight: FontWeight.bold),)
+,
+                            SizedBox(width: 5,),
+                            Icon(Icons.arrow_forward, color: Colors.green.shade800, size: 18,)
+                           ],)
+                          
                           ],
                         ),
                       ),

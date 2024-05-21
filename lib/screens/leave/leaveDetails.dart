@@ -193,22 +193,20 @@ class _leavedetailsState extends State<leavedetails> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Description:",
-                  style: GoogleFonts.openSans(
-                      fontSize: 13, color: black, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  widget.joinModel.description,
-                  style: GoogleFonts.openSans(
-                    color: black,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
+            child: Text(
+              "Description:",
+              style: GoogleFonts.openSans(
+                  fontSize: 13, color: black, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            child: Text(
+              widget.joinModel.description,
+              style: GoogleFonts.openSans(
+                color: black,
+                fontSize: 13,
+              ),
             ),
           ),
 
