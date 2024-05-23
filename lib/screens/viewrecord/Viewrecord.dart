@@ -141,28 +141,7 @@ class _ViewRecordState extends State<ViewRecord> {
                   itemBuilder: (context, index) {
                     UserModel user = users[index];
 
-                    return Dismissible(
-                      key: Key(user.uid!),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) async {
-                        await deleteUser(user);
-                        setState(() {
-                          users.removeAt(index);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("${user.firstName} deleted")),
-                        );
-                      },
-                      background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      child: Card(
+                    return Card(
                         color: Colors.white,
                         surfaceTintColor: Colors.white,
                         elevation: 3,
@@ -243,8 +222,8 @@ class _ViewRecordState extends State<ViewRecord> {
                           ),
                           // Add more user details if needed
                         ),
-                      ),
-                    );
+                      );
+                 
                   },
                 );
               } else {

@@ -1,5 +1,6 @@
 // ignore_for_file: body_might_complete_normally_catch_error
 
+import 'package:attendeasyadmin/Signup_Signin_Screen/signup_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:attendeasyadmin/screens/Home/AdminHome.dart';
 import 'package:attendeasyadmin/Signup_Signin_Screen/Forgot_Screen.dart';
@@ -349,6 +350,32 @@ bool _obscurePassword = true;
                       ),
                       SizedBox(height: 10),
                       loginButton,
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Don't have a Account? "),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpScreen()));
+                            },
+                            child: Text(
+                              "Sign Up ",
+                              style: TextStyle(
+                                  color: Color(0xffe46b10),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
+                    
                     
                       ],),))
                     ],

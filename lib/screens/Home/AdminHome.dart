@@ -1,3 +1,4 @@
+import 'package:attendeasyadmin/screens/User_Requests/user_requests.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -107,6 +108,17 @@ class _AdminHomeState extends State<AdminHome> {
                 },
               ),
               SizedBox(height: 20),
+
+              AdminButton(
+                icon: Icons.approval,
+                label: 'Users Requests',
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => UserRequests()));
+                },
+              ),
+
+             
             ],
           ),
         ),
