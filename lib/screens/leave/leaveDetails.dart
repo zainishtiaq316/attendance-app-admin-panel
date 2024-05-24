@@ -1,3 +1,4 @@
+import 'package:attendeasyadmin/screens/Home/AdminHome.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -273,7 +274,7 @@ class _leavedetailsState extends State<leavedetails> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AdminBottomNav()));
+                          builder: (context) => AdminHome()));
                                       }).show();
                                 
                 // assuranceDialog(context, () async {

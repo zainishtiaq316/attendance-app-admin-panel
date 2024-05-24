@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attendeasyadmin/screens/Edit/Edit_Attendance.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,14 +14,14 @@ import '../../models/usermodel.dart';
 import '../../widgets/admin-drawer.dart';
 // Import the user details screen
 
-class AllUsers extends StatefulWidget {
-  const AllUsers({Key? key}) : super(key: key);
+class AllAttandence extends StatefulWidget {
+  const AllAttandence({Key? key}) : super(key: key);
 
   @override
-  State<AllUsers> createState() => _ViewRecordState();
+  State<AllAttandence> createState() => _ViewRecordState();
 }
 
-class _ViewRecordState extends State<AllUsers> {
+class _ViewRecordState extends State<AllAttandence> {
   Stream<List<UserModel>> fetchAllUsersStream() {
     // Create a StreamController to manage the stream
     StreamController<List<UserModel>> _controller =
@@ -56,16 +57,44 @@ class _ViewRecordState extends State<AllUsers> {
     return _controller.stream;
   }
 
+  Stream<List<UserModel>> fetchAllUsers() {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .where('role', isNotEqualTo: 'Admin')
+      .snapshots()
+      .map((querySnapshot) {
+        List<UserModel> allUsers = [];
+        if (querySnapshot.docs.isNotEmpty) {
+          List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+          for (var document in documents) {
+            Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+            UserModel user = UserModel(
+              uid: userData['uid'],
+              firstName: userData['firstName'],
+              secondName: userData['secondName'],
+              phoneNumber: userData['phoneNumber'],
+              email: userData['email'],
+              photoURL: userData['photoURL'],
+              rollNo: userData['rollNo'],
+            );
+            allUsers.add(user);
+          }
+        }
+        return allUsers;
+      });
+}
+
   void navigateToUserDetails(UserModel user) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserDetailsScreen(user: user),
+        builder: (context) => EditAttendanceScreen(user: user),
       ),
     );
   }
 
   late FocusNode myFocusNode;
+  
 
   DateTime? currentBackPressTime;
   Future<bool> onWillPop() async {
@@ -99,64 +128,127 @@ class _ViewRecordState extends State<AllUsers> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        appBar: AppBar(
-          actionsIconTheme: IconThemeData(color: Colors.blue),
-          title: Text(
-            "All Users",
-            style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.bold,
-              color: kPColor,
+       appBar: AppBar(
+              actionsIconTheme: IconThemeData(color: Colors.blue),
+              title: Text(
+                "All Attendance",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.bold,
+                  color: kPColor,
+                ),
+              ),
+              
+              centerTitle: true,
             ),
-          ),
-          centerTitle: true,
-        ),
-        backgroundColor: Colors.white,
-        drawer: AdminDrawerWidget(),
-        body: Container(
-          child: StreamBuilder<List<UserModel>>(
-            stream:
-                fetchAllUsersStream(), // assuming fetchAllUsersStream() returns a Stream<List<UserModel>>
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                List<UserModel>? users = snapshot.data;
-                if (users != null && users.isNotEmpty) {
-                  return ListView.builder(
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      UserModel user = users[index];
-                      return Card(
-                        color: Colors.white,
-                        elevation: 3,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        shadowColor: black,
-                        child: ListTile(
-                          onTap: () {
-                            navigateToUserDetails(user);
-                          },
-                          title: Center(
-                            child: Text(
-                              '${user.firstName} ${user.secondName}',
-                              style: TextStyle(fontSize: 20),
-                            ),
+           backgroundColor: Colors.white,
+           drawer: AdminDrawerWidget(), body: Container(
+        child: StreamBuilder<List<UserModel>>(
+          stream: fetchAllUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              List<UserModel>? users = snapshot.data;
+              if (users != null && users.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    UserModel user = users[index];
+
+                    return Card(
+                      color: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      elevation: 3,
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shadowColor: Colors.black,
+                      child: ListTile(
+                        onTap: () {
+                          navigateToUserDetails(user);
+                        },
+                        title: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40.0,
+                                    backgroundColor: Colors.grey,
+                                    backgroundImage: user.photoURL != null
+                                        ? NetworkImage(user.photoURL!)
+                                        : null,
+                                    child: user.photoURL == null
+                                        ? Text(
+                                            user.firstName != null
+                                                ? user.firstName![0]
+                                                    .toUpperCase()
+                                                : "",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : null,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${user.firstName} ${user.secondName}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        'Roll No : ${user.rollNo}',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        '${user.email}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        '${user.phoneNumber}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                          // Add more user details if needed
                         ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(child: Text('No users found'));
-                }
+                        // Add more user details if needed
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Center(child: Text('No users found'));
               }
-            },
-          ),
+            }
+          },
         ),
       ),
-    );
+   
+    ));
   }
 }

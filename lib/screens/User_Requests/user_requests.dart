@@ -1,6 +1,8 @@
+import 'package:attendeasyadmin/screens/User_Requests/addUserRequest.dart';
 import 'package:attendeasyadmin/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 
 import 'user_request_detail.dart';
 
@@ -18,6 +20,17 @@ class _UserRequestsState extends State<UserRequests> {
   void initState() {
     super.initState();
     _userRequestsFuture = fetchUserRequests();
+  }
+
+  Future<void> deleteUserRequest(String docId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('userRegistrationRequests')
+          .doc(docId)
+          .delete();
+    } catch (e) {
+      print("Error deleting document: $e");
+    }
   }
 
   Stream<List<Map<String, dynamic>>> fetchUserRequests() async* {
@@ -77,13 +90,13 @@ class _UserRequestsState extends State<UserRequests> {
                 var userRequest = snapshot.data![index];
                 return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              UserRequestDetail(userRequest: userRequest),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         UserRequestDetail(userRequest: userRequest),
+                      //   ),
+                      // );
                     },
                     child: Card(
                       color: Colors.white,
@@ -117,8 +130,10 @@ class _UserRequestsState extends State<UserRequests> {
                               SizedBox(height: 10),
                               Row(
                                 children: [
-                                    Icon(Icons.mail,),
-                                     SizedBox(width: 10),
+                                  Icon(
+                                    Icons.mail,
+                                  ),
+                                  SizedBox(width: 10),
                                   Text(
                                     '${userRequest['email']}',
                                     style: TextStyle(
@@ -131,8 +146,10 @@ class _UserRequestsState extends State<UserRequests> {
                               SizedBox(height: 5),
                               Row(
                                 children: [
-                                    Icon(Icons.phone,),
-                                     SizedBox(width: 10),
+                                  Icon(
+                                    Icons.phone,
+                                  ),
+                                  SizedBox(width: 10),
                                   Text(
                                     '${userRequest['phoneNumber']}',
                                     style: TextStyle(
@@ -145,8 +162,10 @@ class _UserRequestsState extends State<UserRequests> {
                               SizedBox(height: 5),
                               Row(
                                 children: [
-                                    Icon(Icons.message_sharp,),
-                                     SizedBox(width: 10),
+                                  Icon(
+                                    Icons.message_sharp,
+                                  ),
+                                  SizedBox(width: 10),
                                   Text(
                                     '${userRequest['message']}',
                                     style: TextStyle(
@@ -156,6 +175,94 @@ class _UserRequestsState extends State<UserRequests> {
                                   ),
                                 ],
                               ),
+                              SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            context: context,
+                                            useSafeArea: true,
+                                            backgroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadiusDirectional.only(
+                                                topEnd: Radius.circular(25),
+                                                topStart: Radius.circular(25),
+                                              ),
+                                            ),
+                                            builder: (BuildContext context) =>
+                                                AnimatedPadding(
+                                                  padding:
+                                                      MediaQuery.of(context)
+                                                          .viewInsets,
+                                                  duration: const Duration(
+                                                      milliseconds: 100),
+                                                  curve: Curves.decelerate,
+                                                  child: AddUsersRequest(
+                                                      userRequest: userRequest),
+                                                ));
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.05,
+                                        decoration: BoxDecoration(
+                                            color: Colors.green.shade800,
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                        child: Center(
+                                            child: Text(
+                                          "Accept",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                        )),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        print("${userRequest['id']}");
+                                        await deleteUserRequest(
+                                            userRequest['id']);
+                                        Navigator.pop(
+                                            context); // Go back to the previous screen
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.05,
+                                        decoration: BoxDecoration(
+                                            color: Colors.red.shade800,
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                        child: Center(
+                                            child: Text(
+                                          "Reject",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                        )),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
                             ],
                           ),
                         ),

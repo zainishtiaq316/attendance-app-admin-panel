@@ -11,14 +11,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../Home/AdminHome.dart';
 
-class AddUsers extends StatefulWidget {
-  AddUsers({Key? key}) : super(key: key);
+class RequestUser extends StatefulWidget {
+  RequestUser({Key? key}) : super(key: key);
 
   @override
   _AddUsersState createState() => _AddUsersState();
 }
 
-class _AddUsersState extends State<AddUsers> {
+class _AddUsersState extends State<RequestUser> {
   final _auth = FirebaseAuth.instance;
   String? token;
   Future<void> getFirebaseMessagingToken() async {

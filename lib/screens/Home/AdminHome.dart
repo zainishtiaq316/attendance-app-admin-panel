@@ -53,6 +53,8 @@ class _AdminHomeState extends State<AdminHome> {
       onWillPop: onWillPop,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
               actionsIconTheme: IconThemeData(color: Colors.blue),
               title: Text(
                 "Home",

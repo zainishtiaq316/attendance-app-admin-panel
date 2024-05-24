@@ -128,7 +128,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
   @override
   Widget build(BuildContext context) {
      Widget snapshotWidget() {
-      return AddAttendance();
+      return AddAttendance(user: widget.user,);
     }
 
     void _showSnapshot() {
@@ -171,6 +171,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
   backgroundColor: kPColor,
   tooltip: 'Add Attendance',
   onPressed: () {
+    print('${widget.user.uid}');
     
     _showSnapshot();
   },
@@ -457,6 +458,9 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
                             TextButton(
                               child: Text("Delete"),
                               onPressed: () async {
+
+                                print("${widget.user.uid}");
+                                
                                 await FirebaseFirestore.instance
                                     .collection("MarkAttendance")
                                     .doc(widget.user.uid)

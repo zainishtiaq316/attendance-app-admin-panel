@@ -11,14 +11,15 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../Home/AdminHome.dart';
 
-class AddUsers extends StatefulWidget {
-  AddUsers({Key? key}) : super(key: key);
+class AddUsersRequest extends StatefulWidget {
+  final Map<String, dynamic> userRequest;
+  AddUsersRequest({Key? key, required this.userRequest}) : super(key: key);
 
   @override
   _AddUsersState createState() => _AddUsersState();
 }
 
-class _AddUsersState extends State<AddUsers> {
+class _AddUsersState extends State<AddUsersRequest> {
   final _auth = FirebaseAuth.instance;
   String? token;
   Future<void> getFirebaseMessagingToken() async {
@@ -45,6 +46,18 @@ class _AddUsersState extends State<AddUsers> {
   final photoUrlContainer = new TextEditingController();
   bool _obscurePassword = true;
 
+@override
+
+void initState(){
+  super.initState();
+  firstNameEditingController.text = widget.userRequest['firstName'];
+  lastNameEditingController.text = widget.userRequest['lastName'];
+  phoneNumberEditingController.text = widget.userRequest['phoneNumber'];
+  emailEditingController.text = widget.userRequest['email'];
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final firstNameFieldContainer = TextFormField(
@@ -52,6 +65,7 @@ class _AddUsersState extends State<AddUsers> {
       obscureText: false,
       enableSuggestions: true,
       autocorrect: true,
+      enabled: false,
       controller: firstNameEditingController,
       cursorColor: Colors.black45,
       style: TextStyle(color: Colors.black45.withOpacity(0.9)),
@@ -85,6 +99,7 @@ class _AddUsersState extends State<AddUsers> {
       autofocus: false,
       controller: lastNameEditingController,
       obscureText: false,
+      enabled: false,
       enableSuggestions: true,
       autocorrect: true,
       cursorColor: Colors.black45,
@@ -115,7 +130,8 @@ class _AddUsersState extends State<AddUsers> {
       autofocus: false,
       obscureText: false,
       enableSuggestions: true,
-      autocorrect: true,
+      autocorrect: true,enabled: false,
+
       controller: emailEditingController,
       cursorColor: Colors.black45,
       style: TextStyle(color: Colors.black45.withOpacity(0.9)),
@@ -153,6 +169,7 @@ class _AddUsersState extends State<AddUsers> {
       ],
       autofocus: false,
       obscureText: false,
+      enabled: false,
       enableSuggestions: true,
       autocorrect: true,
       controller: phoneNumberEditingController,
@@ -335,6 +352,17 @@ class _AddUsersState extends State<AddUsers> {
       });
     }
   }
+   Future<void> deleteUserRequest(String docId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('userRegistrationRequests')
+          .doc(docId)
+          .delete();
+    } catch (e) {
+      print("Error deleting document: $e");
+    }
+  }
+
 
   postDetailsToFirestore(String email, String password) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -359,6 +387,8 @@ class _AddUsersState extends State<AddUsers> {
         .set(userModel.toMap());
     Fluttertoast.showToast(msg: "Successful Add User");
     //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ViewRecord()));
+     await deleteUserRequest(
+                                            widget.userRequest['id']);
 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminHome()));
 

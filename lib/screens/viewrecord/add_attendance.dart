@@ -1,534 +1,296 @@
 import 'package:attendeasyadmin/models/usermodel.dart';
-import 'package:attendeasyadmin/screens/viewrecord/Viewrecord.dart';
-import 'package:attendeasyadmin/utils/loadingIndicator.dart';
+import 'package:attendeasyadmin/screens/viewrecord/add_checkin.dart';
+import 'package:attendeasyadmin/screens/viewrecord/add_checkout.dart';
+import 'package:attendeasyadmin/screens/viewrecord/add_leaves.dart';
+import 'package:attendeasyadmin/utils/color_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class AddAttendance extends StatefulWidget {
-  AddAttendance({Key? key}) : super(key: key);
+  UserModel user = UserModel();
+  String? uid;
+  String? userToken;
+  AddAttendance({Key? key, required this.user}) : super(key: key);
 
   @override
   _AddUsersState createState() => _AddUsersState();
 }
 
 class _AddUsersState extends State<AddAttendance> {
-  final _auth = FirebaseAuth.instance;
-  String? token;
-  Future<void> getFirebaseMessagingToken() async {
-    await FirebaseMessaging.instance.requestPermission();
+  String _selectedButton = 'Check In'; // Default selected button
+ final nameController = TextEditingController();
+  final rollNoController = TextEditingController();
+  final contactController = TextEditingController();
+  final emailController = TextEditingController();
+  final currentDateController = TextEditingController();
+  final currentTimeController = TextEditingController();
+  final attendanceStatusController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-    await FirebaseMessaging.instance.getToken().then((t) {
-      if (t != null) {
-        setState(() {
-          token = t;
-          print('Push Token: $t');
-        });
-      }
-    });
-  }
-
-  //our form key
-  final _formKey = GlobalKey<FormState>();
-  //editing controller
-  final firstNameEditingController = new TextEditingController();
-  final lastNameEditingController = new TextEditingController();
-  final emailEditingController = new TextEditingController();
-  final phoneNumberEditingController = new TextEditingController();
-  final passwordEditingController = new TextEditingController();
-  final photoUrlContainer = new TextEditingController();
-  bool _obscurePassword = true;
 
   @override
-  Widget build(BuildContext context) {
-    final firstNameFieldContainer = Container(
-      padding: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        autofocus: false,
-        obscureText: false,
-        enableSuggestions: true,
-        autocorrect: true,
-        controller: firstNameEditingController,
-        cursorColor: Colors.black45,
-        style: TextStyle(color: Colors.black45.withOpacity(0.9)),
-        keyboardType: TextInputType.name,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{3,}$');
-          if (value!.isEmpty) {
-            return ("First Name can't be Empty");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid Name (Min. 3 Character)");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          firstNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "First Name",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-          border: InputBorder.none,
-          fillColor: Color(0xfff3f3f4),
-          filled: true,
-        ),
-      ),
-    );
-
-    final lastNameFieldContainer = Container(
-      padding: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        autofocus: false,
-        controller: lastNameEditingController,
-        obscureText: false,
-        enableSuggestions: true,
-        autocorrect: true,
-        cursorColor: Colors.black45,
-        style: TextStyle(color: Colors.black45.withOpacity(0.9)),
-        keyboardType: TextInputType.name,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("Last Name can't be Empty");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          lastNameEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Last Name",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-          border: InputBorder.none,
-          fillColor: Color(0xfff3f3f4),
-          filled: true,
-        ),
-      ),
-    );
-
-    final emailFieldContainer = Container(
-      padding: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        autofocus: false,
-        obscureText: false,
-        enableSuggestions: true,
-        autocorrect: true,
-        controller: emailEditingController,
-        cursorColor: Colors.black45,
-        style: TextStyle(color: Colors.black45.withOpacity(0.9)),
-        keyboardType: TextInputType.emailAddress,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("Please Enter Your Email");
-          }
-          //reg expression for email validation
-          if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-z]+$")
-              .hasMatch(value)) {
-            return ("Please Enter a valid email");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          emailEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Email",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-          border: InputBorder.none,
-          fillColor: Color(0xfff3f3f4),
-          filled: true,
-        ),
-      ),
-    );
-
-    final phoneNumberFieldContainer = Container(
-      padding: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(11),
-        ],
-        autofocus: false,
-        obscureText: false,
-        enableSuggestions: true,
-        autocorrect: true,
-        controller: phoneNumberEditingController,
-        cursorColor: Colors.black45,
-        style: TextStyle(color: Colors.black45.withOpacity(0.9)),
-        keyboardType: TextInputType.phone,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{11,}$');
-          if (value!.isEmpty) {
-            return ("Phone Number can't be Empty");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid phone number (Min. 11 Character)");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          phoneNumberEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Phone Number",
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-          border: InputBorder.none,
-          fillColor: Color(0xfff3f3f4),
-          filled: true,
-        ),
-      ),
-    );
-
-    final passwordFieldContainer = Container(
-      padding: EdgeInsets.zero,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        autofocus: false,
-        enableSuggestions: false,
-        autocorrect: false,
-        controller: passwordEditingController,
-        style: TextStyle(color: Colors.black45.withOpacity(0.9)),
-        cursorColor: Colors.black45,
-        obscureText: _obscurePassword,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{6,}$');
-          if (value!.isEmpty) {
-            return ("Password is required for login");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid Password (Min. 6 Character)");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          passwordEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Password",
-          suffixIcon: IconButton(
-            onPressed: () {
-              setState(() {
-                _obscurePassword = !_obscurePassword; // Toggle visibility
-              });
-            },
-            icon: Icon(
-              _obscurePassword ? Icons.visibility_off : Icons.visibility,
-            ),
-          ),
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
-          border: InputBorder.none,
-          fillColor: Color(0xfff3f3f4),
-          filled: true,
-        ),
-      ),
-    );
-
-    final addUserButton = GestureDetector(
-      onTap: () async {
-        await signUp(
-          emailEditingController.text,
-          passwordEditingController.text,
-        );
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.grey.shade200,
-              offset: Offset(2, 4),
-              blurRadius: 5,
-              spreadRadius: 2,
-            ),
-          ],
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Color(0xfffbb448), Color(0xfff7892b)],
-          ),
-        ),
-        child: Text(
-          "Add Attendance",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-    String _selectedButton = 'CheckIn'; // Default selected button
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.98,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
-      child: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.2,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Add Attendance",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedButton = 'CheckIn';
-                });
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.05,
-                decoration: BoxDecoration(
-                  color: _selectedButton == 'CheckIn'
-                      ? Colors.green.shade800
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.green.shade800),
-                ),
-                child: Center(
-                  child: Text(
-                    'Check In',
-                    style: TextStyle(
-                      color: _selectedButton == 'CheckIn'
-                          ? Colors.white
-                          : Colors.green.shade800,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 15),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedButton = 'CheckOut';
-                });
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.05,
-                decoration: BoxDecoration(
-                  color: _selectedButton == 'CheckOut'
-                      ? Colors.blue.shade800
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.blue.shade800),
-                ),
-                child: Center(
-                  child: Text(
-                    'Check Out',
-                    style: TextStyle(
-                      color: _selectedButton == 'CheckOut'
-                          ? Colors.white
-                          : Colors.blue.shade800,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 15),
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedButton = 'Leave Attendance';
-                });
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.05,
-                decoration: BoxDecoration(
-                  color: _selectedButton == 'Leave Attendance'
-                      ? Colors.red.shade800
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.red.shade800),
-                ),
-                child: Center(
-                  child: Text(
-                    'Leaves',
-                    style: TextStyle(
-                      color: _selectedButton == 'Leave Attendance'
-                          ? Colors.white
-                          : Colors.red.shade800,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+  void initState() {
+    super.initState();
+   
+    nameController.text = '${widget.user.firstName} ${widget.user.secondName}';
+    rollNoController.text = '${widget.user.rollNo}';
+    contactController.text = '${widget.user.phoneNumber}';
+    emailController.text = '${widget.user.email}';
+    String formattedDate = DateFormat.yMd().format(DateTime.now());
     
-              Expanded(
-                  child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 25),
-                    firstNameFieldContainer,
-                    SizedBox(height: 15),
-                    lastNameFieldContainer,
-                    SizedBox(height: 15),
-                    emailFieldContainer,
-                    SizedBox(height: 15),
-                    phoneNumberFieldContainer,
-                    SizedBox(height: 15),
-                    passwordFieldContainer,
-                    SizedBox(height: 15),
-                    addUserButton
-                  ],
-                ),
-              ))
-            ],
-          ),
-        ),
-      ),
-    );
+    String formattedTime2 = DateFormat('h:mm a').format(DateTime.now()); // e.g., "1:15 AM", "9:45 PM"
+
+    currentDateController.text = formattedDate;
+    currentTimeController.text = formattedTime2;
   }
 
-  //signup function
-  Future<void> signUp(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      loader(context);
-      await getFirebaseMessagingToken();
-      await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) => {postDetailsToFirestore()})
-          .catchError((e) {
-        Navigator.pop(context);
-        Fluttertoast.showToast(msg: e!.message);
-      });
+  Future<bool> checkAttendance() async {
+    // Get the current date as a string
+    String currentDate = DateFormat.yMd().format(DateTime.now());
+    // Get the user ID from Firebase Auth
+    // Query the subcollection where you store the attendance data
+    List<QuerySnapshot> snapshots = await Future.wait([
+      FirebaseFirestore.instance
+          .collection('MarkAttendance')
+          .doc(widget.user.uid) // Use the user ID as the document ID
+          .collection('CheckIn')
+          .where('CurrentDate', isEqualTo: currentDate)
+          .get(),
+      FirebaseFirestore.instance
+          .collection('MarkAttendance')
+          .doc(widget.user.uid) // Use the user ID as the document ID
+          .collection('CheckOut')
+          .where('CurrentDate', isEqualTo: currentDate)
+          .get(),
+      FirebaseFirestore.instance
+          .collection('MarkAttendance')
+          .doc(widget.user.uid) // Use the user ID as the document ID
+          .collection('leaves')
+          .where('currentDate', isEqualTo: currentDate)
+          .get(),
+    ]);
+    // Check if there are any documents in the snapshot
+    if (snapshots.any((snapshot) => snapshot.docs.isNotEmpty)) {
+      // The attendance or leave is already marked on the current date
+      return true;
+    } else {
+      // The attendance or leave is not marked yet
+      return false;
     }
   }
+  
+  
+ 
+ 
+  
+  
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+        // Pass your query function as the future argument
+        future: checkAttendance(),
+        // Define a builder function that returns a widget based on the state of the future
+        builder: (context, snapshot) {
+          // Check if the future is completed
+          if (snapshot.connectionState == ConnectionState.done) {
+            // Check if the future returned true or false
+            if (snapshot.data == true) {
+              // The attendance is already marked on the current date, so return a message widget
+              return Padding(
+                padding: EdgeInsets.only(top: 80.0),
+                child: AlertDialog(
+                  title: Padding(
+                    padding: EdgeInsets.only(
+                        top: 20.0), // Add some padding to the top
+                    child: Text('User already marked attendance today.'),
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.98,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Add Attendance",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedButton = 'Check In';
+                                });
+                              },
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                decoration: BoxDecoration(
+                                  color: _selectedButton == 'Check In'
+                                      ? Colors.green.shade800
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                  border:
+                                      Border.all(color: Colors.green.shade800),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Check In',
+                                    style: TextStyle(
+                                      color: _selectedButton == 'Check In'
+                                          ? Colors.white
+                                          : Colors.green.shade800,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedButton = 'Check Out';
+                                });
+                              },
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                decoration: BoxDecoration(
+                                  color: _selectedButton == 'Check Out'
+                                      ? Colors.blue.shade800
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                  border:
+                                      Border.all(color: Colors.blue.shade800),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Check Out',
+                                    style: TextStyle(
+                                      color: _selectedButton == 'Check Out'
+                                          ? Colors.white
+                                          : Colors.blue.shade800,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedButton = 'Leaves';
+                                });
+                              },
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                decoration: BoxDecoration(
+                                  color: _selectedButton == 'Leaves'
+                                      ? Colors.red.shade800
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                  border:
+                                      Border.all(color: Colors.red.shade800),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Leaves',
+                                    style: TextStyle(
+                                      color: _selectedButton == 'Leaves'
+                                          ? Colors.white
+                                          : Colors.red.shade800,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      if (_selectedButton == "Check In")
+                        checkin()
+                      else if (_selectedButton == "Check Out")
+                        checkout()
+                      else
+                        leaves()
+                    ],
+                  ),
+                ),
+              );
+            }
+          } //first if
+          else {
+            // The future is not completed yet, so return a loading indicator widget
+            return Padding(
+              padding: const EdgeInsets.all(80.0),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: kPColor,
+                ),
+              ),
+            );
+          }
+        });
+  }
 
-  postDetailsToFirestore() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
-    UserModel userModel = UserModel();
+  Widget checkin() {
+    print("${widget.uid}");
+    print("${widget.user.token}");
+    return AddCheckIn(user: widget.user,); }
 
-    //writing all values
-    userModel.email = user!.email;
-    userModel.uid = user.uid;
-    userModel.firstName = firstNameEditingController.text;
-    userModel.secondName = lastNameEditingController.text;
-    userModel.phoneNumber = phoneNumberEditingController.text;
-    userModel.photoURL = photoUrlContainer.text;
-    userModel.role = "User";
-    userModel.token = token;
-    // userModel.notifications = [];
-    await FirebaseAuth.instance.currentUser!
-        .updateDisplayName("${firstNameEditingController.text}");
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Successful Add User");
-    //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ViewRecord()));
+  Widget checkout() {
+    return AddCheckOut(user: widget.user);
+  }
 
-    Navigator.pop(context);
+  Widget leaves() {
+    return AddLeaves(user: widget.user,);
   }
 }

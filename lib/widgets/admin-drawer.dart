@@ -128,12 +128,12 @@ class AdminDrawerWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AllUsers()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AllAttandence()));
                     },
                     child: ListTile(
                       titleAlignment: ListTileTitleAlignment.center,
                       title: Text(
-                        "All Users",
+                        "All Attendance",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
