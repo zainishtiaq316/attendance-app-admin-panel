@@ -229,7 +229,7 @@ class _AddUsersState extends State<AddUsers> {
 
     final addUserButton = GestureDetector(
       onTap: () async {
-        await signUp(
+        await addUser(
           emailEditingController.text,
           passwordEditingController.text,
         );
@@ -321,8 +321,8 @@ class _AddUsersState extends State<AddUsers> {
     );
   }
 
-  //signup function
-  Future<void> signUp(String email, String password) async {
+  //addUser function
+  Future<void> addUser(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       loader(context);
       await getFirebaseMessagingToken();
