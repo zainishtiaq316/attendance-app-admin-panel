@@ -55,9 +55,15 @@ class AdminDrawerWidget extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  color: Color(0xfff7892b),
+               
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.32,
+                   decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade400, Colors.blue.shade900,  Colors.orange.shade300],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            )),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
                     child: Column(

@@ -8,6 +8,6 @@ hexStringToColor(String hexColor) {
   return Color(int.parse(hexColor, radix: 16));
 }
 
-final kPColor = Color(0xfff7892b);
+final kPColor = Colors.orange.shade400;
 Color black = Colors.black;
 Color white = Colors.white;

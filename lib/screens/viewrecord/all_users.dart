@@ -128,22 +128,28 @@ class _ViewRecordState extends State<AllAttandence> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        
        appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.orange.shade400,
+        surfaceTintColor: Colors.orange.shade400,
               actionsIconTheme: IconThemeData(color: Colors.blue),
               title: Text(
                 "All Attendance",
                 style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.bold,
-                  color: kPColor,
+                  color: Colors.white,
                 ),
               ),
               
               centerTitle: true,
             ),
            drawer: AdminDrawerWidget(), body: Container(
+             decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade400, Colors.blue.shade900,  Colors.orange.shade300],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),),
         child: StreamBuilder<List<UserModel>>(
           stream: fetchAllUsers(),
           builder: (context, snapshot) {
@@ -171,6 +177,7 @@ class _ViewRecordState extends State<AllAttandence> {
                           navigateToUserDetails(user);
                         },
                         title: Container(
+                          
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,

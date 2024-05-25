@@ -69,6 +69,7 @@ class _ViewRecordState extends State<ViewRecord> {
       ),
     );
   }
+  
 
   @override
   Widget build(BuildContext context) {

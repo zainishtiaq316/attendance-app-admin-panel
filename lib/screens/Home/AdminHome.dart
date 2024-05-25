@@ -1,3 +1,4 @@
+import 'package:attendeasyadmin/screens/Profile/AdminProfile.dart';
 import 'package:attendeasyadmin/screens/User_Requests/user_requests.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,12 +19,11 @@ class AdminHome extends StatefulWidget {
 }
 
 class _AdminHomeState extends State<AdminHome> {
-  
   late FocusNode myFocusNode;
+   User? user = FirebaseAuth.instance.currentUser;
 
   DateTime? currentBackPressTime;
   Future<bool> onWillPop() async {
-    // myFocusNode.unfocus();
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
@@ -34,95 +34,151 @@ class _AdminHomeState extends State<AdminHome> {
       });
       return Future.value(false);
     }
-     await FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => SplashScreen()));
 
     return Future.value(true);
   }
-   @override
+
+  @override
   void dispose() {
     super.dispose();
     myFocusNode.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    
-    // ignore: deprecated_member_use
+    String? name = user?.displayName;
+    String? imageUrl = user?.photoURL;
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-              actionsIconTheme: IconThemeData(color: Colors.blue),
-              title: Text(
-                "Home",
-                style: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.bold,
-                  color: kPColor,
-                ),
-              ),
-              
-              centerTitle: true,
+          backgroundColor: Colors.orange.shade400,
+          surfaceTintColor: Colors.orange.shade400,
+          elevation: 10,
+          actionsIconTheme: IconThemeData(color: Colors.white),
+          title: Text(
+            "Admin Home",
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-           backgroundColor: Colors.white,
-           drawer: AdminDrawerWidget(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Image.asset(
-                  'assets/images/admin.png', // Replace with your image path
-                  height: 100,
-      
-                  fit: BoxFit.cover,
+          ),
+          actions: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> AdminProfile()));
+                  },
+                  child: CircleAvatar(
+                    radius: 25.0,
+                    backgroundColor: Colors.white,
+                    backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
+                    child: imageUrl == null
+                        ? Text(
+                            name != null ? name[0].toUpperCase() : "",
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          )
+                        : null,
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
-              AdminButton(
-                icon: Icons.list_alt,
-                label: 'View All Records',
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ViewRecord()));
-                },
-              ),
-              SizedBox(height: 20),
-              AdminButton(
-                icon: Icons.edit,
-                label: 'Edit Attendance',
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditAttendance()));
-                },
-              ),
-              SizedBox(height: 20),
-              AdminButton(
-                icon: Icons.approval,
-                label: 'Leave Approval',
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LeaveRequests()));
-                },
-              ),
-              SizedBox(height: 20),
-
-              AdminButton(
-                icon: Icons.approval,
-                label: 'Users Requests',
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserRequests()));
-                },
-              ),
-
-             
             ],
+          centerTitle: true,
+        ),
+        backgroundColor: Colors.white,
+        drawer: AdminDrawerWidget(),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade400, Colors.blue.shade900,  Colors.orange.shade300],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 30),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Image.asset(
+                    'assets/images/admin.png', // Replace with your image path
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  "Welcome, Admin!",
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Manage your tasks efficiently",
+                  style: GoogleFonts.montserrat(
+                    fontSize: 18,
+                    color: Colors.white70,
+                  ),
+                ),
+                SizedBox(height: 30),
+                AdminButton(
+                  icon: Icons.list_alt,
+                  label: 'View All Records',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewRecord()),
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                AdminButton(
+                  icon: Icons.edit,
+                  label: 'Edit Attendance',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditAttendance()),
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                AdminButton(
+                  icon: Icons.approval,
+                  label: 'Leave Approval',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LeaveRequests()),
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                AdminButton(
+                  icon: Icons.person_add,
+                  label: 'Users Requests',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserRequests()),
+                    );
+                  },
+                ),
+                SizedBox(height: 30),
+              ],
+            ),
           ),
         ),
       ),
@@ -150,7 +206,18 @@ class AdminButton extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Colors.blue, // Customize the button color here
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade500, Colors.blue.shade800],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, 5),
+              ),
+            ],
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -158,14 +225,15 @@ class AdminButton extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: Colors.white, // Customize the icon color here
+                  color: Colors.white,
                 ),
                 SizedBox(width: 10),
                 Text(
                   label,
-                  style: TextStyle(
-                    color: Colors.white, // Customize the text color here
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
                     fontSize: 18,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

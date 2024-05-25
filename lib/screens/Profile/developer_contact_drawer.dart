@@ -70,17 +70,17 @@ class _DeveloperContactDrawerState extends State<DeveloperContactDrawer> {
     return WillPopScope(
        onWillPop: onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.white,
+    
         
        appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.orange.shade400,
+        surfaceTintColor: Colors.orange.shade400,
             actionsIconTheme: IconThemeData(color: Colors.blue),
             title: Text(
               "Contact",
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.bold,
-                color: kPColor,
+                color: Colors.white,
               ),
               
             ),
@@ -88,131 +88,141 @@ class _DeveloperContactDrawerState extends State<DeveloperContactDrawer> {
           ),
           drawer: AdminDrawerWidget(),
           
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Container(
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade400, Colors.blue.shade900,  Colors.orange.shade300],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Name: Zain Ishtiaq',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      'Email: zainishtiaq.7866@gmail.com',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      'Phone: +92 3028163676',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Name: Zain Ishtiaq',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    'Email: zainishtiaq.7866@gmail.com',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    'Phone: +92 3028163676',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0),
-            GestureDetector(
-              onTap: () async {
-                final Uri params = Uri(
-                  scheme: 'mailto',
-                  path: 'zainishtiaq.7866@gmail.com',
-                  query: 'subject=Subject&body=Enter your message',
-                );
-                String url = params.toString();
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Could not launch email app'),
-                  ));
-                }
-              },
-             child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height*0.05,
-                decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.mail, color: Colors.white, size: 23,),
-                      SizedBox(width: 5,),
-                      Text("Email", style: TextStyle(color: Colors.white),),
-                    ],
-                  ),
-                )),
-            
-            ),
-            SizedBox(height: 10.0),
-          GestureDetector(
-              onTap: () async {
-                String phoneNumber = '+923028163676';
-                String url = 'tel:$phoneNumber';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Could not launch phone app'),
-                  ));
-                }
-              },
-             
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height*0.05,
-                decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.phone, color: Colors.white, size: 23,),
-                      SizedBox(width: 5,),
-                      Text("Call", style: TextStyle(color: Colors.white),),
-                    ],
-                  ),
-                )),
-            ),
-      
-              SizedBox(height: 10.0),
-          
+              SizedBox(height: 20.0),
               GestureDetector(
-              onTap: () async {
-               await DeveloperContactDrawer.sendMessageOnWhatsApp();
-              },
-             child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height*0.05,
-                decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.mail, color: Colors.white, size: 23,),
-                      SizedBox(width: 5,),
-                      Text("WhatsApp", style: TextStyle(color: Colors.white),),
-                    ],
-                  ),
-                )),
+                onTap: () async {
+                  final Uri params = Uri(
+                    scheme: 'mailto',
+                    path: 'zainishtiaq.7866@gmail.com',
+                    query: 'subject=Subject&body=Enter your message',
+                  );
+                  String url = params.toString();
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Could not launch email app'),
+                    ));
+                  }
+                },
+               child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*0.05,
+                  decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.mail, color: Colors.white, size: 23,),
+                        SizedBox(width: 5,),
+                        Text("Email", style: TextStyle(color: Colors.white),),
+                      ],
+                    ),
+                  )),
+              
+              ),
+              SizedBox(height: 10.0),
+            GestureDetector(
+                onTap: () async {
+                  String phoneNumber = '+923028163676';
+                  String url = 'tel:$phoneNumber';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Could not launch phone app'),
+                    ));
+                  }
+                },
+               
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*0.05,
+                  decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.phone, color: Colors.white, size: 23,),
+                        SizedBox(width: 5,),
+                        Text("Call", style: TextStyle(color: Colors.white),),
+                      ],
+                    ),
+                  )),
+              ),
+                
+                SizedBox(height: 10.0),
             
-            ),
-            
-          ]),
+                GestureDetector(
+                onTap: () async {
+                 await DeveloperContactDrawer.sendMessageOnWhatsApp();
+                },
+               child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*0.05,
+                  decoration: BoxDecoration(color: kPColor, borderRadius: BorderRadius.circular(30)),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.mail, color: Colors.white, size: 23,),
+                        SizedBox(width: 5,),
+                        Text("WhatsApp", style: TextStyle(color: Colors.white),),
+                      ],
+                    ),
+                  )),
+              
+              ),
+              
+            ]),
+          ),
         ),
       ),
     );
