@@ -52,6 +52,7 @@ class _AdminHomeState extends State<AdminHome> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
+        
         appBar: AppBar(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,

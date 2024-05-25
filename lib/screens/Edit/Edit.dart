@@ -54,6 +54,7 @@ class _EditAttendanceState extends State<EditAttendance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,
@@ -104,24 +105,23 @@ class _EditAttendanceState extends State<EditAttendance> {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: 40.0,
-                                    backgroundColor: Colors.grey,
-                                    backgroundImage: user.photoURL != null
-                                        ? NetworkImage(user.photoURL!)
-                                        : null,
-                                    child: user.photoURL == null
-                                        ? Text(
-                                            user.firstName != null
-                                                ? user.firstName![0]
-                                                    .toUpperCase()
-                                                : "",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : null,
-                                  ),
-                                  SizedBox(
+                                      radius: 40.0,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: user.photoURL != null
+                                          ? NetworkImage(user.photoURL!)
+                                          : null,
+                                      child: user.photoURL!.isEmpty
+                                          ? Text(
+                                              "${user.firstName?[0]}",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : null,
+                                          
+                                    ),
+                                    
+                                     SizedBox(
                                     width: 10,
                                   ),
                                   Column(

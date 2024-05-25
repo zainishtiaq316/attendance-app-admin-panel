@@ -158,6 +158,7 @@ class _ChangeEmailScreenState extends State<ChangeEmail> {
 
     return Scaffold(
       
+      
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,

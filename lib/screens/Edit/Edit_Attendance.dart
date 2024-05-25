@@ -152,6 +152,7 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,
@@ -167,16 +168,16 @@ class _EditAttendanceScreenState extends State<EditAttendanceScreen> {
           },
         ),
       ),
-    floatingActionButton: FloatingActionButton(
-  backgroundColor: kPColor,
-  tooltip: 'Add Attendance',
-  onPressed: () {
-    print('${widget.user.uid}');
+//     floatingActionButton: FloatingActionButton(
+//   backgroundColor: kPColor,
+//   tooltip: 'Add Attendance',
+//   onPressed: () {
+//     print('${widget.user.uid}');
     
-    _showSnapshot();
-  },
-  child: const Icon(Icons.add, color: Colors.white, size: 28),
-),
+//     _showSnapshot();
+//   },
+//   child: const Icon(Icons.add, color: Colors.white, size: 28),
+// ),
 
       
       body: Column(

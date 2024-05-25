@@ -65,6 +65,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,
@@ -102,24 +103,23 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                           CircleAvatar(
+                          CircleAvatar(
                                       radius: 70.0,
                                       backgroundColor: Colors.grey,
                                       backgroundImage: widget.user.photoURL != null
                                           ? NetworkImage(widget.user.photoURL!)
                                           : null,
-                                      child: widget.user.photoURL == null
+                                      child: widget.user.photoURL!.isEmpty
                                           ? Text(
-                                              widget.user.firstName != null
-                                                  ? widget.user.firstName![0]
-                                                      .toUpperCase()
-                                                  : "",
+                                              "${widget.user.firstName?[0]}",
                                               style: TextStyle(
                                                 color: Colors.white,
                                               ),
                                             )
                                           : null,
+                                          
                                     ),
+                       
                         ],
                       ),
                       SizedBox(height: 30,),

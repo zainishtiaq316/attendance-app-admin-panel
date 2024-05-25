@@ -132,6 +132,7 @@ class _leaveConfiramtionState extends State<leaveConfiramtion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,

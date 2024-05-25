@@ -39,6 +39,7 @@ class _AddUsersState extends State<AddUsers> {
   //editing controller
   final firstNameEditingController = new TextEditingController();
   final lastNameEditingController = new TextEditingController();
+  final rollNoEditingController = new TextEditingController();
   final emailEditingController = new TextEditingController();
   final phoneNumberEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
@@ -103,6 +104,44 @@ class _AddUsersState extends State<AddUsers> {
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "Last Name",
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
+        border: InputBorder.none,
+        fillColor: Color(0xfff3f3f4),
+        filled: true,
+      ),
+    );
+     
+    final rollNoFieldContainer = TextFormField(
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(6),
+      ],
+      autofocus: false,
+      obscureText: false,
+      enableSuggestions: true,
+      autocorrect: true,
+      controller: rollNoEditingController,
+      cursorColor: Colors.black45,
+      style: TextStyle(color: Colors.black45.withOpacity(0.9)),
+      keyboardType: TextInputType.phone,
+      validator: (value) {
+        RegExp regex = new RegExp(r'^.{6,}$');
+        if (value!.isEmpty) {
+          return ("Roll No can't be Empty");
+        }
+        if (!regex.hasMatch(value)) {
+          return ("Enter Valid Roll No (Max. 6 Character)");
+        }
+        return null;
+      },
+      onSaved: (value) {
+        rollNoEditingController.text = value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: "Roll No",
         floatingLabelBehavior: FloatingLabelBehavior.never,
         hintStyle: TextStyle(color: Colors.grey.withOpacity(0.9)),
         border: InputBorder.none,
@@ -304,6 +343,8 @@ class _AddUsersState extends State<AddUsers> {
                     SizedBox(height: 15),
                     lastNameFieldContainer,
                     SizedBox(height: 15),
+                    rollNoFieldContainer,
+                    SizedBox(height: 15),
                     emailFieldContainer,
                     SizedBox(height: 15),
                     phoneNumberFieldContainer,
@@ -326,10 +367,15 @@ class _AddUsersState extends State<AddUsers> {
     if (_formKey.currentState!.validate()) {
       loader(context);
       await getFirebaseMessagingToken();
-      await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) => {postDetailsToFirestore(email, password)})
-          .catchError((e) {
+      User? adminUser = _auth.currentUser; // Store the current admin user
+
+      await _auth.createUserWithEmailAndPassword(email: email, password: password).then((value) async {
+        await postDetailsToFirestore(email, password);
+        // After creating the user, re-sign in the admin user
+        if (adminUser != null) {
+          await _auth.signInWithEmailAndPassword(email: adminUser.email!, password: passwordEditingController.text);
+        }
+      }).catchError((e) {
         Navigator.pop(context);
         Fluttertoast.showToast(msg: e!.message);
       });
@@ -348,38 +394,37 @@ class _AddUsersState extends State<AddUsers> {
     userModel.secondName = lastNameEditingController.text;
     userModel.phoneNumber = phoneNumberEditingController.text;
     userModel.photoURL = photoUrlContainer.text;
+    userModel.rollNo = rollNoEditingController.text;
     userModel.role = "User";
     userModel.token = token;
     // userModel.notifications = [];
-    await FirebaseAuth.instance.currentUser!
-        .updateDisplayName("${firstNameEditingController.text}");
     await firebaseFirestore
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Successful Add User");
-    //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> ViewRecord()));
+    Fluttertoast.showToast(msg: "User Added Successfully");
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AdminHome()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()));
 
-   final Uri params = Uri(
-  scheme: 'mailto',
-  path: email,
-  query: 'subject=Regarding Attend easy Registration&body=Registration Successful!%0AThank you for registering.%0AWe look forward to seeing you.%0AYour Email: $email%0AYour Password: $password',
-);
-String url = params.toString();
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: email,
+      query: 'subject=Regarding Attend easy Registration&body=Registration Successful!%0AThank you for registering.%0AWe look forward to seeing you.%0AYour Email: $email%0AYour Password: $password %0AYour Roll No: ${rollNoEditingController.text}',
+    );
+    String url = params.toString();
 
-// ignore: deprecated_member_use
-if (await canLaunch(url)) {
-  // ignore: deprecated_member_use
-  await launch(url);
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text('Could not launch email app'),
-  ));
-}
-
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Could not launch email app'),
+      ));
+    }
   }
+
+
 
 
 }

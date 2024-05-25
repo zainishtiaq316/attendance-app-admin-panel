@@ -128,7 +128,10 @@ class _ViewRecordState extends State<AllAttandence> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
+        backgroundColor: Colors.white,
        appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
               actionsIconTheme: IconThemeData(color: Colors.blue),
               title: Text(
                 "All Attendance",
@@ -140,7 +143,6 @@ class _ViewRecordState extends State<AllAttandence> {
               
               centerTitle: true,
             ),
-           backgroundColor: Colors.white,
            drawer: AdminDrawerWidget(), body: Container(
         child: StreamBuilder<List<UserModel>>(
           stream: fetchAllUsers(),
@@ -176,24 +178,21 @@ class _ViewRecordState extends State<AllAttandence> {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    radius: 40.0,
-                                    backgroundColor: Colors.grey,
-                                    backgroundImage: user.photoURL != null
-                                        ? NetworkImage(user.photoURL!)
-                                        : null,
-                                    child: user.photoURL == null
-                                        ? Text(
-                                            user.firstName != null
-                                                ? user.firstName![0]
-                                                    .toUpperCase()
-                                                : "",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : null,
-                                  ),
-                                  SizedBox(
+                                      radius: 40.0,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: user.photoURL != null
+                                          ? NetworkImage(user.photoURL!)
+                                          : null,
+                                      child: user.photoURL!.isEmpty
+                                          ? Text(
+                                              "${user.firstName?[0]}",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : null,
+                                          
+                                    ), SizedBox(
                                     width: 10,
                                   ),
                                   Column(

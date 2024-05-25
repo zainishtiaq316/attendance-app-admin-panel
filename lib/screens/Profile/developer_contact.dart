@@ -13,7 +13,8 @@ class DeveloperContactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.grey.shade200,
+      //backgroundColor: Colors.grey.shade200,'
+      
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kPColor,

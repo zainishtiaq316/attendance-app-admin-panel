@@ -28,6 +28,7 @@ class _leavedetailsState extends State<leavedetails> {
         .doc(widget.joinModel.id);
     
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,

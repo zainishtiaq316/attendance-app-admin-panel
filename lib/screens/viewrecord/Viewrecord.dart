@@ -97,6 +97,8 @@ class _ViewRecordState extends State<ViewRecord> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      
       appBar: AppBar(
         backgroundColor: kPColor,
         elevation: 0,

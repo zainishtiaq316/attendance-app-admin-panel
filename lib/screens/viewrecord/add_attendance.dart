@@ -282,15 +282,19 @@ class _AddUsersState extends State<AddAttendance> {
   }
 
   Widget checkin() {
-    print("${widget.uid}");
+    print("${widget.user.uid}");
     print("${widget.user.token}");
     return AddCheckIn(user: widget.user,); }
 
   Widget checkout() {
+    print("${widget.user.uid}");
+    print("${widget.user.token}");
     return AddCheckOut(user: widget.user);
   }
 
   Widget leaves() {
+    print("${widget.user.uid}");
+    print("${widget.user.token}");
     return AddLeaves(user: widget.user,);
   }
 }

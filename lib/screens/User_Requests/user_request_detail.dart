@@ -17,7 +17,10 @@ class UserRequestDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         title: Text('User Request Detail'),
       ),
       body: Padding(
