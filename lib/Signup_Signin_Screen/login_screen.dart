@@ -13,7 +13,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:attendeasyadmin/widgets/bezier-container.dart';
 
 import '../models/usermodel.dart';
-import '../screens/Home/Home_page.dart';
 import '../utils/loadingIndicator.dart';
 //import 'package:fluttertoast/fluttertoast.dart'
 
@@ -82,40 +81,80 @@ bool _obscurePassword = true;
     });
   }
 
+  // //login function
+  // Future<void> sigIn(
+  //   String email,
+  //   String password,
+  // ) async {
+  //   if (_formKey.currentState!.validate()) {
+  //     loader(context);
+  //     await _auth
+  //         .signInWithEmailAndPassword(email: email, password: password)
+  //         .then((uid) async => {
+  //               // Fluttertoast.showToast(msg: "Login Successful"),
+  //               // if (FirebaseAuth.instance.currentUser!.emailVerified)
+  //               //   {
+  //               await getuser(FirebaseAuth.instance.currentUser!.uid),
+  //               setState(() {
+  //                 role = loggedInUser.role;
+  //               }),
+  //                Fluttertoast.showToast(msg: "Signin Successful !"),
+  //               Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //                   builder: (context) =>
+  //                       role == "Admin" ? AdminHome() : HomePageView()))
+  //               // }
+  //               // else
+  //               //   {
+  //               //     Navigator.pop(context),
+  //               //     Fluttertoast.showToast(msg: "Email Not Verified")
+  //               //   }
+  //             })
+  //         .catchError((e) {
+  //           Navigator.pop(context);
+  //       Fluttertoast.showToast(msg: "Error found, check email or password !");
+  //     });
+  //   }
+  // }
+
+
+
   //login function
-  Future<void> sigIn(
-    String email,
-    String password,
-  ) async {
-    if (_formKey.currentState!.validate()) {
-      loader(context);
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((uid) async => {
-                // Fluttertoast.showToast(msg: "Login Successful"),
-                // if (FirebaseAuth.instance.currentUser!.emailVerified)
-                //   {
-                await getuser(FirebaseAuth.instance.currentUser!.uid),
-                setState(() {
-                  role = loggedInUser.role;
-                }),
-                 Fluttertoast.showToast(msg: "Signin Successful !"),
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) =>
-                        role == "Admin" ? AdminHome() : HomePageView()))
-                // }
-                // else
-                //   {
-                //     Navigator.pop(context),
-                //     Fluttertoast.showToast(msg: "Email Not Verified")
-                //   }
-              })
-          .catchError((e) {
-            Navigator.pop(context);
-        Fluttertoast.showToast(msg: "Error found, check email or password !");
-      });
-    }
+Future<void> sigIn(String email, String password) async {
+  if (_formKey.currentState!.validate()) {
+    loader(context);
+    await _auth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((uid) async => {
+              await getuser(FirebaseAuth.instance.currentUser!.uid),
+              setState(() {
+                role = loggedInUser.role;
+              }),
+              if (role == "Admin")
+                {
+
+
+                   Fluttertoast.showToast(msg: "Signin Successful!"),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => AdminHome())),
+                 
+                }
+              else
+                {
+                  Navigator.pop(context),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Only Admin allowed, following is user email"),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                }
+            })
+        .catchError((e) {
+          Navigator.pop(context);
+          Fluttertoast.showToast(msg: "Error found, check email or password!");
+        });
   }
+}
 
   @override
   void dispose() {
